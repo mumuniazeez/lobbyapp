@@ -25,3 +25,8 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background-color: #a8a7a7;
 }
+
+
+#alertContainer {
+  z-index: 999999;
+}

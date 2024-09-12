@@ -1,13 +1,30 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUsers,
   faNewspaper,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { useServer } from "../hooks/hooks";
+import LoadingAnimation from "./LoadingAnimation";
+
 export default function MobileNav() {
-  let { pathname } = useLocation();
-  return (
+  const nav = useNavigate();
+  const [asLoggedIn, setAsLoggedIn] = useState(false);
+  let { pathname, search } = useLocation();
+  useServer(`/community/all`, "GET", (res) => {
+    if (
+      res.message == "Unauthorized" ||
+      res.message == "Error verifying token" ||
+      res.message == "Failed to fetch"
+    ) {
+      setAsLoggedIn(false);
+      sessionStorage.setItem("urlRef", `${pathname}${search}`);
+      nav("/login");
+    } else setAsLoggedIn(true);
+  });
+  return asLoggedIn ? (
     <>
       <Outlet />
       <div className="container-fluid text-bg-primary position-fixed bottom-0 py-2">
@@ -54,5 +71,11 @@ export default function MobileNav() {
         </div>
       </div>
     </>
+  ) : (
+    <div className="container-fluid" style={{ height: "100vh" }}>
+      <div className="container py-5">
+        <LoadingAnimation addWhiteSpace={false} />
+      </div>
+    </div>
   );
 }

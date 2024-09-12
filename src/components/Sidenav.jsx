@@ -9,6 +9,7 @@ import {
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useServer } from "../hooks/hooks";
+import LoadingAnimation from "./LoadingAnimation";
 
 export default function Sidenav() {
   // /community/myCommunities
@@ -16,107 +17,120 @@ export default function Sidenav() {
   const [asLoggedIn, setAsLoggedIn] = useState(false);
   let { pathname, search } = useLocation();
   useServer(`/community/all`, "GET", (res) => {
-    if (res.message == "Unauthorized") {
+    if (
+      res.message == "Unauthorized" ||
+      res.message == "Error verifying token" ||
+      res.message == "Failed to fetch"
+    ) {
+      setAsLoggedIn(false);
       sessionStorage.setItem("urlRef", `${pathname}${search}`);
       nav("/login");
     } else setAsLoggedIn(true);
   });
   return asLoggedIn ? (
-    <>
-      <div className="row" style={{ height: "100vh" }}>
-        <div
-          class="d-flex flex-column flex-shrink-0 col-1 p-0 ps-2"
-          style={{
-            width: "80px",
-          }}
-        >
-          <ul class="nav nav-pills nav-flush flex-column mb-auto text-center p-0">
-            <li class="nav-item">
-              <Link
-                to="/"
-                className="d-flex align-items-center justify-content-center fs-1 fw-bold p-2"
-              >
-                <FontAwesomeIcon
-                  className={`border border-1 rounded-circle p-2 fs-3 ${
-                    pathname == "/"
-                      ? "border-secondary text-bg-secondary"
-                      : "border-dark text-black"
-                  }`}
-                  icon={faUsers}
-                />
-              </Link>
-            </li>
-            <li class="nav-item">
-              <Link
-                to="/discover"
-                className="d-flex align-items-center justify-content-center fs-1 fw-bold p-2"
-              >
-                <FontAwesomeIcon
-                  className={`border border-1 rounded-circle p-2 fs-2 ${
-                    pathname == "/discover"
-                      ? "border-secondary text-bg-secondary"
-                      : "border-dark text-black"
-                  }`}
-                  icon={faNewspaper}
-                />
-              </Link>
-            </li>
-          </ul>
-          <div className="border-top">
+        <>
+
+    <div className="row" style={{ height: "100vh" }}>
+      <div
+        class="d-flex flex-column flex-shrink-0 col-1 p-0 ps-2"
+        style={{
+          width: "80px",
+        }}
+      >
+        <ul class="nav nav-pills nav-flush flex-column mb-auto text-center p-0">
+          <li class="nav-item">
             <Link
-              to=""
-              className="d-flex align-items-center justify-content-center fs-5 link-body-emphasis p-3"
+              to="/"
+              className="d-flex align-items-center justify-content-center fs-1 fw-bold p-2"
             >
-              <FontAwesomeIcon icon={faGear} />
+              <FontAwesomeIcon
+                className={`border border-1 rounded-circle p-2 fs-3 ${
+                  pathname == "/"
+                    ? "border-secondary text-bg-secondary"
+                    : "border-dark text-black"
+                }`}
+                icon={faUsers}
+              />
             </Link>
-            <div class="dropdown border-top">
-              <a
-                href="#"
-                class="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <img
-                  src="https://github.com/mdo.png"
-                  alt="mdo"
-                  width="24"
-                  height="24"
-                  class="rounded-circle"
-                />
-              </a>
-              <ul class="dropdown-menu text-small shadow">
-                <li>
-                  <a class="dropdown-item" href="#">
-                    New project...
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#">
-                    Settings
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#">
-                    Profile
-                  </a>
-                </li>
-                <li>
-                  <hr class="dropdown-divider" />
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#">
-                    Sign out
-                  </a>
-                </li>
-              </ul>
-            </div>
+          </li>
+          <li class="nav-item">
+            <Link
+              to="/discover"
+              className="d-flex align-items-center justify-content-center fs-1 fw-bold p-2"
+            >
+              <FontAwesomeIcon
+                className={`border border-1 rounded-circle p-2 fs-2 ${
+                  pathname == "/discover"
+                    ? "border-secondary text-bg-secondary"
+                    : "border-dark text-black"
+                }`}
+                icon={faNewspaper}
+              />
+            </Link>
+          </li>
+        </ul>
+        <div className="border-top">
+          <Link
+            to=""
+            className="d-flex align-items-center justify-content-center fs-5 link-body-emphasis p-3"
+          >
+            <FontAwesomeIcon icon={faGear} />
+          </Link>
+          <div class="dropdown border-top">
+            <a
+              href="#"
+              class="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <img
+                src="https://github.com/mdo.png"
+                alt="mdo"
+                width="24"
+                height="24"
+                class="rounded-circle"
+              />
+            </a>
+            <ul class="dropdown-menu text-small shadow">
+              <li>
+                <a class="dropdown-item" href="#">
+                  New project...
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  Settings
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  Profile
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  Sign out
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
-
-        <Outlet />
       </div>
-    </>
-  ) : null;
+
+      <Outlet />
+    </div>
+        </>
+
+  ) : (
+      <div className="container-fluid d-flex align-items-center justify-content-center" style={{ height: "100vh" }}>
+        <div className="container py-5">
+          <LoadingAnimation addWhiteSpace={false} />
+        </div>
+      </div>
+  );
 }
 
 function CommunityLink({ to, title, verified, createdBy }) {

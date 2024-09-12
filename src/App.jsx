@@ -10,6 +10,7 @@ import Discover from "./components/Discover";
 import Home from "./components/Home";
 import UserProfile from "./components/UserProfile";
 import MobileNav from "./components/MobileNav";
+import NoPage from "./components/NoPage";
 
 export default function App() {
   const [isMobile, setIsMobile] = useState(false);
@@ -22,6 +23,7 @@ export default function App() {
   }, []);
   return (
     <>
+      <div id="modalContainer"></div>
       <div
         id="alertContainer"
         className="position-fixed text-center bottom-0 end-0 px-5"
@@ -38,6 +40,7 @@ export default function App() {
               </Route>
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="*" element={<NoPage />} />
             </Routes>
           </BrowserRouter>
         </div>

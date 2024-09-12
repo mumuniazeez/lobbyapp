@@ -41,7 +41,7 @@ export default function CreateCommunityModal() {
         data-bs-backdrop="static"
         data-bs-keyboard="false"
       >
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="createCommunityModalTitle">
