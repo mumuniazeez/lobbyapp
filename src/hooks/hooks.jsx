@@ -109,10 +109,9 @@ const useServer = (
     mode: "no-cors",
   };
 
-  fetch(`http://localhost:3000${endpoint}`, option)
+  fetch(`https://lobbyserver.vercel.app${endpoint}`, option)
     .then((res) => res.json())
     .then((data) => {
-     
       state(data);
     })
     .catch((err) => {
