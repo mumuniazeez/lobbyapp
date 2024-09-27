@@ -106,9 +106,7 @@ const useServer = (
     headers: myHeaders,
     body: body ? JSON.stringify(body) : null,
     redirect: "follow",
-    mode: "no-cors",
   };
-
   fetch(`https://lobbyserver.onrender.com${endpoint}`, option)
     .then((res) => res.json())
     .then((data) => {
