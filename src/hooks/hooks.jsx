@@ -1,9 +1,9 @@
 const useAlert = (msg = "This is an alert", type = "primary") => {
   let container = document.createElement("div");
   let alertHTML = `
-    <div className="alert alert-${type} alert-dismissible fade show mt-3 " role="alert">
+    <div class="alert alert-${type} alert-dismissible fade show mt-3 " role="alert">
     ${msg}
-    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>`;
   container.innerHTML = alertHTML;
 
@@ -111,16 +111,16 @@ const useServer = (
   fetch(`http://localhost:3000${endpoint}`, option)
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
-      if (typeof data.message == "string") {
-        useAlert(data.message);
-      }
+     
       state(data);
     })
     .catch((err) => {
       usePrompt(
         "Unable to connect to server",
-        "An error occurred while connecting to server, please try again or restart the page.",
+        `An error occurred while connecting to server, please try again or restart the page.
+        <hr/>
+        <small class="text-secondary">${err}</small>
+        `,
         "primary",
         "Try again",
         () => {

@@ -10,12 +10,17 @@ import {
   faSignOut,
   faSignIn,
   faSquareArrowUpRight,
+  faSadCry,
+  faPlus,
+  faGear,
 } from "@fortawesome/free-solid-svg-icons";
-import { useServer } from "../hooks/hooks";
+import { useAlert, useServer } from "../hooks/hooks";
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import LoadingAnimation from "./LoadingAnimation";
+import CreateCommunityModal from "./CreateCommunityModal";
 export default function Discover() {
+  document.title = "Discover | Lobby";
   let { search } = useLocation();
   let nav = useNavigate();
   let urlSearchParam = new URLSearchParams(search);
@@ -24,6 +29,7 @@ export default function Discover() {
   const [communities, setCommunities] = useState(null);
   const [communityId, setCommunityId] = useState(urlSearchParam.get("cId"));
   const [isMobile, setIsMobile] = useState(false);
+  const [unFilterCommunities, setUnFilterCommunities] = useState([]);
   window.addEventListener("resize", () =>
     setIsMobile(window.innerWidth <= 762)
   );
@@ -33,7 +39,7 @@ export default function Discover() {
   }, []);
 
   useEffect(() => {
-    useServer("/community/all/", "get", setCommunities);
+    useServer("/community/all/", "get", setUnFilterCommunities);
   }, []);
   useEffect(() => {
     setCommunityId(urlSearchParam.get("cId"));
@@ -48,16 +54,33 @@ export default function Discover() {
     }
   }, [communityId]);
 
+  useEffect(() => {
+    if (!unFilterCommunities) return;
+    if (typeof unFilterCommunities.message == "string") {
+      setCommunities(unFilterCommunities);
+      return;
+    } else {
+      setCommunities(
+        unFilterCommunities.filter((community) => !community.isInCommunity)
+      );
+    }
+  }, [unFilterCommunities]);
+
   const joinCommunity = (comID) => {
     useServer(`/community/join/${comID}`, "post", (res) => {
-      useServer("/community/all/", "get", setCommunities);
+      useAlert(res.message);
+      useServer("/community/all/", "get", setUnFilterCommunities);
       if (communityId)
         useServer(`/community/profile/${communityId}`, "get", setCommunityInfo);
     });
   };
   const leaveCommunity = (comID) => {
     useServer(`/community/leave/${comID}`, "post", (res) => {
-      useServer("/community/all/", "get", setCommunities);
+      useAlert(
+        res.message,
+        res.message == "Cannot leave your own community" ? "danger" : "primary"
+      );
+      useServer("/community/all/", "get", setUnFilterCommunities);
       if (communityId)
         useServer(`/community/profile/${communityId}`, "get", setCommunityInfo);
     });
@@ -66,81 +89,112 @@ export default function Discover() {
   return (
     <>
       <div
-        className={`col-md-3 p-0 bg-light ${
+        className={`col-md-3 border-end p-0 bg-light ${
           isMobile && communityId ? "d-none" : ""
         }`}
-        style={{ height: "100vh" }}
+        style={{ height: isMobile ? "90vh" : "100vh" }}
       >
-        <div className="text-bg-primary p-2 pt-4">
+        <div className="p-2 pt-4">
           <div className="d-flex justify-content-between mb-2">
             <div>
-              <h1>Discover</h1>
+              <h4>Discover</h4>
             </div>
             <div>
-              <Link className="text-white text-decoration-none me-2">
-                <FontAwesomeIcon icon={faEllipsisVertical} />
-              </Link>
+              <span className="me-2">
+                <FontAwesomeIcon
+                  data-bs-toggle="dropdown"
+                  icon={faEllipsisVertical}
+                  style={{ cursor: "pointer" }}
+                />
+                <ul className="dropdown-menu text-small pt-3">
+                  <li>
+                    <Link to="/settings" className="dropdown-item">
+                      <span className="">
+                        <FontAwesomeIcon icon={faGear} className="me-2" />
+                        Settings
+                      </span>
+                    </Link>
+                  </li>
+                </ul>
+              </span>
             </div>
           </div>
-          <div className="input-group w-100 mb-3">
-            <label htmlFor="search" className="input-group-text" id="search">
-              <FontAwesomeIcon icon={faSearch} />
-            </label>
-            <input
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-              aria-describedby="search"
-              id="search"
-              name="search"
-              className="form-control"
-            />
+          <div className="search">
+            <div className="input-group border-bottom border-primary rounded bg-body-secondary">
+              <input
+                type="search"
+                className="form-control-lg form-control bg-body-secondary border-0"
+                style={{ fontSize: "12px" }}
+                placeholder="Search communities"
+              />
+              <FontAwesomeIcon icon={faSearch} className="btn" />
+            </div>
           </div>
         </div>
         <div className="container overflow-hidden overflow-y-scroll h-75">
           {communities ? (
             typeof communities.message == "string" ? (
-              <h6>{communities.message}</h6>
-            ) : (
-              communities.map((community, index) => {
-                return (
-                  <>
-                    <div className="container  p-0 mt-3 mb-3" key={index}>
+              <div className="container text-center py-5">
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  className="me-3 fs-1 text-secondary mb-4"
+                />
+                <h6>{communities.message}</h6>
+                <button
+                  className="w-100 btn btn-primary mt-3"
+                  data-bs-toggle="modal"
+                  data-bs-target="#createCommunityModal"
+                >
+                  <FontAwesomeIcon icon={faPlus} className="me-2" />
+                  Create one
+                </button>
+              </div>
+            ) : communities.length > 0 ? (
+              communities.map((community) => {
+                return !community.isInCommunity ? (
+                  <div key={communities.id}>
+                    <div className="container  p-0 mt-3 mb-3">
                       <div className="d-flex align-items-center justify-content-between">
                         <Link
                           to={`/discover?cId=${community.id}`}
                           className="btn text-start p-0 d-flex align-items-center"
                         >
                           <div
-                            class="d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 rounded-circle me-3"
-                            style={{ width: "3rem", height: "3rem" }}
+                            className="d-inline-flex align-items-center justify-content-center text-secondary bg-body-secondary bg-gradient fs-5 rounded-circle me-3"
+                            style={{ width: "2.5rem", height: "2.5rem" }}
                           >
                             <FontAwesomeIcon icon={faUsers} />
                           </div>
-                          <p className="fw-bold fs-6 m-0">{community.name}</p>
+                          <h6>{community.name}</h6>
                         </Link>
                         <div>
-                          {community.isInCommunity ? (
+                          {isMobile ? (
                             <button
-                              className="btn btn-outline-danger"
-                              onClick={() => leaveCommunity(community.id)}
-                            >
-                              Leave <FontAwesomeIcon icon={faSignOut} />
-                            </button>
-                          ) : (
-                            <button
-                              className="btn btn-outline-primary"
+                              className="btn btn-outline-primary rounded-pill"
                               onClick={() => joinCommunity(community.id)}
                             >
                               Join <FontAwesomeIcon icon={faSignIn} />
                             </button>
-                          )}
+                          ) : null}
                         </div>
                       </div>
                     </div>
-                  </>
-                );
+                  </div>
+                ) : null;
               })
+            ) : (
+              <>
+                <div className="container text-center py-5">
+                  <FontAwesomeIcon
+                    icon={faSadCry}
+                    className="me-3 fs-1 text-secondary mb-4"
+                  />
+                  <h6>No new community available.</h6>
+                  <p className="lead">
+                    Open <Link to="/">Joined community</Link>
+                  </p>
+                </div>
+              </>
             )
           ) : (
             <LoadingAnimation />
@@ -149,85 +203,93 @@ export default function Discover() {
       </div>
 
       <div
-        className={`col-md-8 p-5 ${isMobile && !communityId ? "d-none" : ""}`}
-        style={{ height: "100vh" }}
+        className={`col-md-8 p-0 ${isMobile && !communityId ? "d-none" : ""}`}
+        style={{ width: !isMobile ? "68.66666667%" : "100%", height: "100vh" }}
       >
         {communityId ? (
           communityInfo ? (
             <>
-              <div className="container border-bottom bg-light p-2 rounded-top-3 m-0 ">
-                <div className="d-flex align-items-center justify-content-between">
+              <div
+                className={`container p-0 ${isMobile ? "chat--container" : ""}`}
+                style={{
+                  width: "100%",
+                  height: "100vh",
+                }}
+              >
+                <div className="bg-light container w-100 border-bottom">
                   <div className="d-flex align-items-center justify-content-between">
-                    <div className="d-flex align-items-center">
-                      <Link
-                        to="/discover"
-                        className="text-decoration-none text-black me-3"
-                      >
-                        <FontAwesomeIcon icon={faArrowLeft} />
-                      </Link>
-                      <div
-                        class="d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 rounded-circle me-3"
-                        style={{ width: "2.5rem", height: "2.5rem" }}
-                      >
-                        <FontAwesomeIcon icon={faUsers} className="fs-4" />
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div className="d-flex align-items-center py-2">
+                        <Link
+                          to="/discover"
+                          className="text-decoration-none text-black me-3"
+                        >
+                          <FontAwesomeIcon icon={faArrowLeft} />
+                        </Link>
+                        <div
+                          className="d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 rounded-circle me-3"
+                          style={{ width: "2.5rem", height: "2.5rem" }}
+                        >
+                          <FontAwesomeIcon icon={faUsers} className="fs-4" />
+                        </div>
+                        <h3>{communityInfo.name}</h3>
                       </div>
-                      <h3>{communityInfo.name}</h3>
+                    </div>
+                    <div>
+                      <FontAwesomeIcon icon={faEllipsisVertical} />
                     </div>
                   </div>
-                  <div>
-                    <FontAwesomeIcon icon={faEllipsisVertical} />
-                  </div>
                 </div>
-              </div>
-              <div
-                className="container bg-light p-2 rounded-bottom-3 m-0 overflow-hidden overflow-y-scroll"
-                style={{ scrollBehavior: "smooth", height: "60vh" }}
-              >
-                <div className="container text-center">
-                  <div
-                    class="d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-1 rounded-circle me-3"
-                    style={{ width: "10rem", height: "10rem" }}
-                  >
-                    <FontAwesomeIcon
-                      icon={faUsers}
-                      style={{ fontSize: "50pt" }}
-                    />
+                <div
+                  className="mb-3 overflow-hidden overflow-y-scroll bg-light"
+                  style={{ scrollBehavior: "smooth", height: "100%" }}
+                >
+                  <div className="container text-center">
+                    <div
+                      className="d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-1 rounded-circle me-3"
+                      style={{ width: "10rem", height: "10rem" }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faUsers}
+                        style={{ fontSize: "50pt" }}
+                      />
+                    </div>
+                    <h1>{communityInfo.name}</h1>
+                    <p className="lead">{communityInfo.description}</p>
+                    <p className="text-secondary">
+                      Community | {communityInfo.members.length}{" "}
+                      {communityInfo.members.length < 2 ? "member" : "members"}
+                    </p>
                   </div>
-                  <h1>{communityInfo.name}</h1>
-                  <p className="lead">{communityInfo.description}</p>
-                  <p className="text-secondary">
-                    Community | {communityInfo.members.length}{" "}
-                    {communityInfo.members.length < 2 ? "member" : "members"}
-                  </p>
-                </div>
-                <div className="container text-center">
-                  <div>
-                    {communityInfo.isInCommunity ? (
-                      <>
-                        <Link
-                          to={`/?cId=${communityInfo.id}`}
-                          className="ms-3 btn btn-primary me-3"
-                        >
-                          Open <FontAwesomeIcon icon={faSquareArrowUpRight} />
-                        </Link>
+                  <div className="container text-center">
+                    <div>
+                      {communityInfo.isInCommunity ? (
+                        <>
+                          <Link
+                            to={`/?cId=${communityInfo.id}`}
+                            className="ms-3 btn btn-primary me-3"
+                          >
+                            Open <FontAwesomeIcon icon={faSquareArrowUpRight} />
+                          </Link>
+                          <button
+                            className="btn btn-outline-danger rounded-pill"
+                            onClick={() => leaveCommunity(communityInfo.id)}
+                          >
+                            Leave <FontAwesomeIcon icon={faSignOut} />
+                          </button>
+                        </>
+                      ) : (
                         <button
-                          className="btn btn-outline-danger"
-                          onClick={() => leaveCommunity(communityInfo.id)}
+                          className="btn btn-outline-primary"
+                          onClick={() => joinCommunity(communityInfo.id)}
                         >
-                          Leave <FontAwesomeIcon icon={faSignOut} />
+                          Join <FontAwesomeIcon icon={faSignIn} />
                         </button>
-                      </>
-                    ) : (
-                      <button
-                        className="btn btn-outline-primary"
-                        onClick={() => joinCommunity(communityInfo.id)}
-                      >
-                        Join <FontAwesomeIcon icon={faSignIn} />
+                      )}
+                      <button className="ms-3 btn btn-danger">
+                        Report <FontAwesomeIcon icon={faThumbsDown} />
                       </button>
-                    )}
-                    <button className="ms-3 btn btn-danger">
-                      Report <FontAwesomeIcon icon={faThumbsDown} />
-                    </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -247,6 +309,8 @@ export default function Discover() {
           </>
         )}
       </div>
+
+      <CreateCommunityModal />
     </>
   );
 }

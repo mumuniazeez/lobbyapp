@@ -2,6 +2,7 @@ import { BoxArrowDown, ArrowRight } from "react-bootstrap-icons";
 import { useState, useEffect } from "react";
 import { useAlert, useServer } from "../hooks/hooks";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 export default function Signup() {
   const nav = useNavigate();
   const [userData, setUserData] = useState({
@@ -151,7 +152,9 @@ export default function Signup() {
   };
   return (
     <>
-      <div className="container bg-white py-5 d-flex justify-content-center">
+        <div className="container-fluid d-flex align-items-center justify-content-center" style={{height: "100vh"}}>
+
+      <div className="container bg-light py-5 d-flex justify-content-center rounded-3">
         <div className="container  rounded-3 row">
           <div className="col-md-12">
             <h1 className="fw-bold text-primary">Lobby</h1>
@@ -376,12 +379,16 @@ export default function Signup() {
                     <span className="visually-hidden">Loading...</span>
                   </div>
                 ) : null}
-                Login
+                Signup
               </button>
             </form>
           </div>
+          <div className="col-12">
+            <p className="lead">Already have an account? <Link to="/login">Login</Link></p>
+          </div>
         </div>
       </div>
+</div>
     </>
   );
 }

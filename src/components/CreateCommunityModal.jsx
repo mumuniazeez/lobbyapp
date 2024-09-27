@@ -32,7 +32,7 @@ export default function CreateCommunityModal() {
   return (
     <>
       <div
-        class="modal fade"
+        className="modal fade"
         id="createCommunityModal"
         tabIndex="-1"
         aria-labelledby="createCommunityModalTitle"
@@ -41,20 +41,20 @@ export default function CreateCommunityModal() {
         data-bs-backdrop="static"
         data-bs-keyboard="false"
       >
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="createCommunityModalTitle">
+        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="createCommunityModalTitle">
                 Create Community
               </h1>
               <button
                 type="button"
-                class="com btn-close"
+                className="com btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
             </div>
-            <div class="modal-body">
+            <div className="modal-body">
               <form onSubmit={(e) => submitHandle(e)}>
                 <div className="form-floating mb-3">
                   <input
@@ -83,6 +83,7 @@ export default function CreateCommunityModal() {
                     name="description"
                     required
                     value={communityInfo.description}
+                    style={{ height: "250px" }}
                     onChange={(e) =>
                       setCommunityInfo({
                         ...communityInfo,
@@ -111,10 +112,10 @@ export default function CreateCommunityModal() {
                 </div>
               </form>
             </div>
-            <div class="modal-footer">
+            <div className="modal-footer">
               <button
                 type="button"
-                class="btn btn-secondary"
+                className="btn btn-secondary"
                 data-bs-dismiss="modal"
               >
                 Close

@@ -11,6 +11,8 @@ import Home from "./components/Home";
 import UserProfile from "./components/UserProfile";
 import MobileNav from "./components/MobileNav";
 import NoPage from "./components/NoPage";
+import Settings from "./components/Settings";
+import AboutLobby from "./components/AboutLobby";
 
 export default function App() {
   const [isMobile, setIsMobile] = useState(false);
@@ -29,17 +31,22 @@ export default function App() {
         className="position-fixed text-center bottom-0 end-0 px-5"
       ></div>
       <main className="bg-body-secondary">
-        <div className="container-fluid p-0">
-          {/* <Addroom /> */}
+        <div
+          className="container-fluid p-0"
+          style={{ height: "100vh", width: "100wh" }}
+        >
           <BrowserRouter>
             <Routes>
               <Route path="/" element={isMobile ? <MobileNav /> : <Sidenav />}>
                 <Route index element={<Home />} />
                 <Route path="/discover" element={<Discover />} />
                 <Route path="/user" element={<UserProfile />} />
+                {/* <Route path="/community/profile" element={<CommunityProfile />} /> */}
+                <Route path="/settings" element={<Settings />} />
               </Route>
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/about" element={<AboutLobby />} />
               <Route path="*" element={<NoPage />} />
             </Routes>
           </BrowserRouter>

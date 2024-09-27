@@ -4,178 +4,194 @@ import {
   faUsers,
   faGear,
   faNewspaper,
+  faNavicon,
+  faUser,
+  faClose,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useServer } from "../hooks/hooks";
+import { useEffect, useState, useRef } from "react";
+import { useServer, usePrompt } from "../hooks/hooks";
 import LoadingAnimation from "./LoadingAnimation";
 
 export default function Sidenav() {
   // /community/myCommunities
   const nav = useNavigate();
   const [asLoggedIn, setAsLoggedIn] = useState(false);
-  let { pathname, search } = useLocation();
-  useServer(`/community/all`, "GET", (res) => {
-    if (
-      res.message == "Unauthorized" ||
-      res.message == "Error verifying token" ||
-      res.message == "Failed to fetch"
-    ) {
-      setAsLoggedIn(false);
-      sessionStorage.setItem("urlRef", `${pathname}${search}`);
-      nav("/login");
-    } else setAsLoggedIn(true);
-  });
-  return asLoggedIn ? (
-        <>
+  const [expandMenu, setExpandMenu] = useState(false);
 
-    <div className="row" style={{ height: "100vh" }}>
-      <div
-        class="d-flex flex-column flex-shrink-0 col-1 p-0 ps-2"
-        style={{
-          width: "80px",
-        }}
-      >
-        <ul class="nav nav-pills nav-flush flex-column mb-auto text-center p-0">
-          <li class="nav-item">
-            <Link
-              to="/"
-              className="d-flex align-items-center justify-content-center fs-1 fw-bold p-2"
-            >
-              <FontAwesomeIcon
-                className={`border border-1 rounded-circle p-2 fs-3 ${
-                  pathname == "/"
-                    ? "border-secondary text-bg-secondary"
-                    : "border-dark text-black"
-                }`}
-                icon={faUsers}
-              />
-            </Link>
-          </li>
-          <li class="nav-item">
-            <Link
-              to="/discover"
-              className="d-flex align-items-center justify-content-center fs-1 fw-bold p-2"
-            >
-              <FontAwesomeIcon
-                className={`border border-1 rounded-circle p-2 fs-2 ${
-                  pathname == "/discover"
-                    ? "border-secondary text-bg-secondary"
-                    : "border-dark text-black"
-                }`}
-                icon={faNewspaper}
-              />
-            </Link>
-          </li>
-        </ul>
-        <div className="border-top">
-          <Link
-            to=""
-            className="d-flex align-items-center justify-content-center fs-5 link-body-emphasis p-3"
+  const sNav = useRef(null);
+
+  let { pathname, search } = useLocation();
+
+  useEffect(() => {
+    if (localStorage.theme == "system") {
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? (document.body.dataset.bsTheme = "dark")
+        : (document.body.dataset.bsTheme = "light");
+    } else document.body.dataset.bsTheme = localStorage.theme;
+  }, []);
+
+  useEffect(() => {
+    useServer(`/user/me`, "GET", (res) => {
+      if (
+        res.message == "Unauthorized" ||
+        res.message == "Error verifying token"
+      ) {
+        setAsLoggedIn(false);
+        sessionStorage.setItem("urlRef", `${pathname}${search}`);
+        nav("/login");
+      } else {
+        localStorage.setItem("theme", res.theme);
+        if (res.theme == "system") {
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? (document.body.dataset.bsTheme = "dark")
+            : (document.body.dataset.bsTheme = "light");
+          window.matchMedia("(prefers-color-scheme: dark)").onchange = (e) => {
+            if (res.theme !== "system") return;
+            e.matches
+              ? (document.body.dataset.bsTheme = "dark")
+              : (document.body.dataset.bsTheme = "light");
+          };
+        } else document.body.dataset.bsTheme = res.theme;
+        setAsLoggedIn(true);
+      }
+    });
+  }, []);
+
+  // window.addEventListener("click", (e) => {
+  //   console.log(sNav.current == e.target);
+  //   if (!sNav.current && sNav.current == e.target) return;
+
+  //   setExpandMenu(false);
+  //   sNav.current.classList.remove("nav-expanded");
+  // });
+
+  const signOut = () => {
+    usePrompt(
+      "Sign out",
+      "Are you sure you want to sign out ?",
+      "danger",
+      "Sign out",
+      () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("theme");
+        document.body.dataset.bsTheme = "system";
+        nav("/login");
+      }
+    );
+  };
+  return asLoggedIn ? (
+    <>
+      <div className="row" style={{ height: "100vh" }}>
+        <div
+          className="col-1"
+          style={{
+            width: "65px",
+          }}
+        >
+          <div
+            class={`d-flex flex-column flex-shrink-0 p-0 h-100 align-items-start justify-content-start text-start ${
+              expandMenu ? "nav-expanded border-end shadow rounded-end-3" : ""
+            }`}
+            style={{
+              width: "65px",
+            }}
+            onMouseLeave={(e) => {
+              if (!expandMenu) return;
+              window.onclick = () => {
+                setExpandMenu(false);
+              };
+            }}
+            onMouseEnter={(e) => {
+              window.onclick = () => {};
+            }}
           >
-            <FontAwesomeIcon icon={faGear} />
-          </Link>
-          <div class="dropdown border-top">
-            <a
-              href="#"
-              class="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <img
-                src="https://github.com/mdo.png"
-                alt="mdo"
-                width="24"
-                height="24"
-                class="rounded-circle"
-              />
-            </a>
-            <ul class="dropdown-menu text-small shadow">
-              <li>
-                <a class="dropdown-item" href="#">
-                  New project...
-                </a>
+            <ul className="nav nav-pills nav-flush flex-column mb-auto text-center p-0">
+              <li className="nav-item">
+                <div className="d-flex align-items-center justify-content-start fs-4 fw-bold p-2">
+                  <FontAwesomeIcon
+                    className={`p-2 fs-5 ${
+                      expandMenu ? "text-primary" : "text-secondary"
+                    }`}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setExpandMenu(!expandMenu)}
+                    icon={expandMenu ? faClose : faNavicon}
+                  />
+                </div>
               </li>
-              <li>
-                <a class="dropdown-item" href="#">
-                  Settings
-                </a>
+              <li className="nav-item">
+                <Link
+                  to="/"
+                  className="d-flex align-items-center justify-content-start p-2 text-decoration-none"
+                >
+                  <FontAwesomeIcon
+                    className={`p-2 fs-6 ${
+                      pathname == "/" ? "" : "text-black"
+                    }`}
+                    icon={faUsers}
+                  />
+                  <span className="ms-3 text-black fs-6">Communities</span>
+                </Link>
               </li>
-              <li>
-                <a class="dropdown-item" href="#">
-                  Profile
-                </a>
-              </li>
-              <li>
-                <hr class="dropdown-divider" />
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">
-                  Sign out
-                </a>
+              <li className="nav-item">
+                <Link
+                  to="/discover"
+                  className="d-flex align-items-center justify-content-start p-2 text-decoration-none"
+                >
+                  <FontAwesomeIcon
+                    className={`p-2 fs-5 ${
+                      pathname == "/discover" ? "" : "text-black"
+                    }`}
+                    icon={faNewspaper}
+                  />
+                  <span className="ms-3 text-black fs-6">Discover</span>
+                </Link>
               </li>
             </ul>
+            <div className="border-top w-100">
+              <Link
+                to="/settings"
+                className="d-flex align-items-center justify-content-start p-2 text-decoration-none"
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  className={`p-2 fs-5 ${
+                    pathname == "/settings" ? "" : "text-black"
+                  }`}
+                />
+                <span className="ms-3 text-black fs-6">Settings</span>
+              </Link>
+              <Link
+                to="/settings?tab=profile"
+                className="d-flex align-items-center justify-content-start p-2 text-decoration-none"
+              >
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className={`p-2 fs-5 ${
+                    pathname + search == "/settings?tab=profile"
+                      ? ""
+                      : "text-black"
+                  }`}
+                />
+                <span className="ms-3 text-black fs-6">Profile</span>
+              </Link>
+            </div>
           </div>
         </div>
+
+        <Outlet />
       </div>
-
-      <Outlet />
-    </div>
-        </>
-
+    </>
   ) : (
-      <div className="container-fluid d-flex align-items-center justify-content-center" style={{ height: "100vh" }}>
-        <div className="container py-5">
-          <LoadingAnimation addWhiteSpace={false} />
-        </div>
-      </div>
-  );
-}
-
-function CommunityLink({ to, title, verified, createdBy }) {
-  return (
-    <Link to={to} className="nav-link">
-      <div className="d-flex text-body-secondary pt-3">
-        <svg
-          className="bd-placeholder-img flex-shrink-0 me-2 rounded"
-          width="32"
-          height="32"
-          xmlns="http://www.w3.org/2000/svg"
-          role="img"
-          aria-label="Placeholder: 32x32"
-          preserveAspectRatio="xMidYMid slice"
-          focusable="false"
-        >
-          <title>Placeholder</title>
-          <rect width="100%" height="100%" fill="#007bff"></rect>
-          <text x="50%" y="50%" fill="#007bff" dy=".3em">
-            32x32
-          </text>
-        </svg>
-        <div className="pb-3 mb-0 small lh-sm w-100">
-          <div className="d-flex justify-content-between">
-            <strong className="text-gray-dark">{title}</strong>
-          </div>
-          <span className="d-block">
-            {verified && <CheckCircle className="text-primary" />} Verified
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-function RoomLink({ title, createdBy }) {
-  return (
-    <div className="my-3 p-3 bg-body rounded shadow-sm">
-      <div className="d-flex text-body-secondary pt-3">
-        <div className="pb-3 mb-0 small lh-sm w-100">
-          <div className="d-flex justify-content-between">
-            <strong className="text-gray-dark">{title}</strong>
-          </div>
-          <span className="d-block">Created by {createdBy}</span>
-        </div>
+    <div
+      className="container-fluid d-flex align-items-center justify-content-center"
+      style={{ height: "100vh" }}
+    >
+      <div className="container py-5">
+        <LoadingAnimation addWhiteSpace={false} />
       </div>
     </div>
   );

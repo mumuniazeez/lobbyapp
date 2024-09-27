@@ -7,6 +7,49 @@ html {
   overflow: hidden;
 }
 
+
+[data-bs-theme] {
+  transition: all 0.5s ease-out !important;
+}
+
+[data-bs-theme="dark"] {
+  --bs-light: #212529;
+  --bs-dark: #f8f9fa;
+  --bs-white: #0000;
+  --bs-black: #ffff;
+  --bs-dark-rgb: 248, 249, 250;
+  --bs-light-rgb: 33, 37, 41;
+  --bs-btn-color: #f8f9fa;
+}
+
+[data-bs-theme="dark"] .btn-light {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #212529;
+  --bs-btn-border-color: #212529;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #424649;
+  --bs-btn-hover-border-color: #373b3e;
+  --bs-btn-focus-shadow-rgb: 66, 70, 73;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #4d5154;
+  --bs-btn-active-border-color: #373b3e;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #212529;
+  --bs-btn-disabled-border-color: #212529;
+}
+[data-bs-theme="dark"] .text-bg-light {
+  color: rgba(var(--bs-white-rgb), var(--bs-text-opacity)) !important;
+}
+[data-bs-theme="dark"] .text-black {
+  --bs-text-opacity: 1;
+  color: rgba(var(--bs-white-rgb), var(--bs-text-opacity)) !important;
+}
+[data-bs-theme="dark"] .bg-light {
+  --bs-text-opacity: 1;
+  background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+}
+
 .chat--container {
   padding-bottom: 70px !important;
 }
@@ -26,7 +69,64 @@ html {
   background-color: #a8a7a7;
 }
 
-
 #alertContainer {
   z-index: 999999;
+}
+
+.contextmenu {
+  list-style: none;
+  padding-left: 0;
+  padding: 10px;
+  width: 200px;
+  z-index: 999999999;
+}
+
+.contextmenu .btn {
+  text-align: start !important;
+}
+
+.chat-input-field-container {
+  height: fit-content;
+}
+
+.chat-input-field {
+  resize: none;
+  overflow: hidden;
+  overflow-y: scroll;
+  max-height: 73px;
+  min-height: 50px;
+  padding: 10px;
+  transition: height 0.2s ease;
+  border: none;
+
+}
+.chat-input-field:focus {
+  height: auto;
+  outline: unset;
+}
+
+.chat-input-field:focus,
+.chat-input-field:focus-visible {
+  border: none;
+  outline: unset;
+}
+
+.message-container a {
+  color: cyan;
+}
+.message-container p {
+  margin-bottom: 0 !important;
+}
+
+.nav-expanded {
+  z-index: 9999999;
+  position: fixed;
+  left: 0;
+  width: 200px !important;
+  height: 100vh;
+  justify-content: start;
+  align-items: start;
+  text-align: start;
+  background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+  transition: width 0.2s ease-out !important;
 }
