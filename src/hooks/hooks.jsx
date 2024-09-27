@@ -109,7 +109,7 @@ const useServer = (
     mode: "no-cors",
   };
 
-  fetch(`https://lobbyserver.vercel.app${endpoint}`, option)
+  fetch(`https://lobbyserver.onrender.com${endpoint}`, option)
     .then((res) => res.json())
     .then((data) => {
       state(data);
