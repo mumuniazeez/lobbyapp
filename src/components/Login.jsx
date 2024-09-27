@@ -57,9 +57,9 @@ export default function Login() {
     <>
       <div
         className="container-fluid d-flex align-items-center justify-content-center"
-        style={{ height: "100vh" }}
+        style={{ height: "100%" }}
       >
-        <div className="container bg-light py-5 d-flex justify-content-center rounded-3">
+        <div className="container bg-light py-5 d-flex justify-content-center rounded-3 overflow-y-scroll h-100">
           <div className="container  rounded-3 row">
             <div className="col-md-12">
               <h1 className="fw-bold text-primary">Lobby</h1>

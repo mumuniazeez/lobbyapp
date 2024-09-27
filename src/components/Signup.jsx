@@ -152,243 +152,252 @@ export default function Signup() {
   };
   return (
     <>
-        <div className="container-fluid d-flex align-items-center justify-content-center" style={{height: "100vh"}}>
-
-      <div className="container bg-light py-5 d-flex justify-content-center rounded-3">
-        <div className="container  rounded-3 row">
-          <div className="col-md-12">
-            <h1 className="fw-bold text-primary">Lobby</h1>
-            <p>
-              Join Lobby Today Discover a new way to connect, share, and grow
-              with Lobby.{" "}
-            </p>
-            <p className="fs-5">Chat, Meetings and Education made Easy</p>
-          </div>
-          <div className="col-md-12">
-            <form
-              className="row  justify-content-center"
-              onSubmit={(e) => formSubmit(e)}
-            >
-              <div className="col-md-6 mb-3">
-                <div className="form-floating">
-                  <input
-                    type="text"
-                    id="firstName"
-                    placeholder="First name"
-                    class={`form-control ${userData.firstName.valid}`}
-                    value={userData.firstName.data}
-                    onChange={(e) => {
-                      if (e.target.value) userData.firstName.valid = "";
-                      else {
-                        userData.firstName.valid = "is-invalid";
-                      }
-                      setUserData({
-                        ...userData,
-                        firstName: {
-                          ...userData.firstName,
-                          data: e.target.value,
-                        },
-                      });
-                    }}
-                  />
-                  <label htmlFor="firstName " className="">
-                    First name
-                  </label>
-                  <div className="invalid-feedback">
-                    Please fill in your first name
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6 mb-3">
-                <div className="form-floating">
-                  <input
-                    type="text"
-                    id="lastName"
-                    placeholder="Last name"
-                    class={`form-control ${userData.lastName.valid}`}
-                    value={userData.lastName.data}
-                    onChange={(e) => {
-                      if (e.target.value) userData.lastName.valid = "";
-                      else {
-                        userData.lastName.valid = "is-invalid";
-                      }
-
-                      setUserData({
-                        ...userData,
-                        lastName: {
-                          ...userData.lastName,
-                          data: e.target.value,
-                        },
-                      });
-                    }}
-                  />
-                  <label htmlFor="lastName" className="">
-                    Last name
-                  </label>
-                  <div className="invalid-feedback">
-                    Please fill in your last name
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6 mb-3">
-                <div className="input-group mb-3 h-100">
-                  <span className="input-group-text" id="basic-addon1">
-                    @
-                  </span>
-                  <input
-                    type="text"
-                    placeholder="Username"
-                    aria-label="Username"
-                    aria-describedby="basic-addon1"
-                    class={`form-control ${userData.username.valid}`}
-                    value={userData.username.data}
-                    onChange={(e) => {
-                      validateUsername(e.target.value);
-                      setUserData({
-                        ...userData,
-                        username: {
-                          ...userData.username,
-                          data: e.target.value,
-                        },
-                      });
-                    }}
-                  />
-                  <div className="valid-feedback">
-                    {userData.username.validationMSG}
-                  </div>
-                  <div className="invalid-feedback">
-                    {userData.username.validationMSG}
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6 mb-3">
-                <div className="form-floating">
-                  <input
-                    type="email"
-                    id="email"
-                    placeholder="Email"
-                    class={`form-control ${userData.email.valid}`}
-                    value={userData.email.data}
-                    onChange={(e) => {
-                      if (
-                        /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(e.target.value)
-                      )
-                        userData.email.valid = "";
-                      else {
-                        userData.email.valid = "is-invalid";
-                      }
-                      setUserData({
-                        ...userData,
-                        email: {
-                          ...userData.email,
-                          data: e.target.value,
-                        },
-                      });
-                    }}
-                  />
-                  <label htmlFor="email" className="">
-                    Email
-                  </label>
-                  <div className="invalid-feedback">Enter a valid email</div>
-                </div>
-              </div>
-              <div className="col-md-6 mb-3">
-                <div className="form-floating">
-                  <input
-                    type="password"
-                    id="password"
-                    placeholder="Password"
-                    class={`form-control ${userData.password.valid}`}
-                    value={userData.password.data}
-                    new-password
-                    onChange={(e) => {
-                      validatePassword(e.target.value);
-                      setUserData({
-                        ...userData,
-                        password: {
-                          ...userData.password,
-                          data: e.target.value,
-                        },
-                      });
-                    }}
-                  />
-                  <label htmlFor="password" className="">
-                    Password
-                  </label>
-                  <div className="valid-feedback">Looks okay</div>
-                  <div className="invalid-feedback">
-                    Password must contain:
-                    <ul>
-                      {!/.{8,}/.test(userData.password.data) && (
-                        <li>At least 8 characters</li>
-                      )}
-                      {!/(?=.*[a-z])/.test(userData.password.data) && (
-                        <li>Lowercase</li>
-                      )}
-                      {!/(?=.*[A-Z])/.test(userData.password.data) && (
-                        <li>Uppercase</li>
-                      )}
-                      {!/(?=.*[0-9])/.test(userData.password.data) && (
-                        <li>Number</li>
-                      )}
-                      {!/(?=.*\W)/.test(userData.password.data) && (
-                        <li>Symbols</li>
-                      )}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6 mb-3">
-                <div className="form-floating">
-                  <input
-                    type="password"
-                    id="cPassword"
-                    placeholder="Confirm Password"
-                    new-password
-                    class={`form-control ${userData.cPassword.valid}`}
-                    value={userData.cPassword.data}
-                    onChange={(e) => {
-                      if (e.target.value) {
-                        if (e.target.value != userData.password.data) {
-                          userData.cPassword.valid = "is-invalid";
-                        } else userData.cPassword.valid = "is-valid";
-                      } else userData.cPassword.valid = "is-invalid";
-                      setUserData({
-                        ...userData,
-                        cPassword: {
-                          ...userData.cPassword,
-                          data: e.target.value,
-                        },
-                      });
-                    }}
-                  />
-                  <label htmlFor="cPassword" className="">
-                    Confirm Password
-                  </label>
-                  <div className="valid-feedback">Looks okay</div>
-                  <div className="invalid-feedback">Incorrect password</div>
-                </div>
-              </div>
-              <button
-                className="btn btn-primary col-md-6"
-                type="submit"
-                disabled={submitted}
+      <div
+        className="container-fluid d-flex align-items-center justify-content-center"
+        style={{ height: "100%" }}
+      >
+        <div className="container bg-light py-5 d-flex justify-content-center rounded-3 overflow-y-scroll h-100">
+          <div className="container  rounded-3 row">
+            <div className="col-md-12">
+              <h1 className="fw-bold text-primary">Lobby</h1>
+              <p>
+                Join Lobby Today Discover a new way to connect, share, and grow
+                with Lobby.{" "}
+              </p>
+              <p className="fs-5">Chat, Meetings and Education made Easy</p>
+            </div>
+            <div className="col-md-12">
+              <form
+                className="row  justify-content-center"
+                onSubmit={(e) => formSubmit(e)}
               >
-                {submitted ? (
-                  <div className="spinner-border text-light me-3" role="status">
-                    <span className="visually-hidden">Loading...</span>
+                <div className="col-md-6 mb-3">
+                  <div className="form-floating">
+                    <input
+                      type="text"
+                      id="firstName"
+                      placeholder="First name"
+                      class={`form-control ${userData.firstName.valid}`}
+                      value={userData.firstName.data}
+                      onChange={(e) => {
+                        if (e.target.value) userData.firstName.valid = "";
+                        else {
+                          userData.firstName.valid = "is-invalid";
+                        }
+                        setUserData({
+                          ...userData,
+                          firstName: {
+                            ...userData.firstName,
+                            data: e.target.value,
+                          },
+                        });
+                      }}
+                    />
+                    <label htmlFor="firstName " className="">
+                      First name
+                    </label>
+                    <div className="invalid-feedback">
+                      Please fill in your first name
+                    </div>
                   </div>
-                ) : null}
-                Signup
-              </button>
-            </form>
-          </div>
-          <div className="col-12">
-            <p className="lead">Already have an account? <Link to="/login">Login</Link></p>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <div className="form-floating">
+                    <input
+                      type="text"
+                      id="lastName"
+                      placeholder="Last name"
+                      class={`form-control ${userData.lastName.valid}`}
+                      value={userData.lastName.data}
+                      onChange={(e) => {
+                        if (e.target.value) userData.lastName.valid = "";
+                        else {
+                          userData.lastName.valid = "is-invalid";
+                        }
+
+                        setUserData({
+                          ...userData,
+                          lastName: {
+                            ...userData.lastName,
+                            data: e.target.value,
+                          },
+                        });
+                      }}
+                    />
+                    <label htmlFor="lastName" className="">
+                      Last name
+                    </label>
+                    <div className="invalid-feedback">
+                      Please fill in your last name
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <div className="input-group mb-3 h-100">
+                    <span className="input-group-text" id="basic-addon1">
+                      @
+                    </span>
+                    <input
+                      type="text"
+                      placeholder="Username"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                      class={`form-control ${userData.username.valid}`}
+                      value={userData.username.data}
+                      onChange={(e) => {
+                        validateUsername(e.target.value);
+                        setUserData({
+                          ...userData,
+                          username: {
+                            ...userData.username,
+                            data: e.target.value,
+                          },
+                        });
+                      }}
+                    />
+                    <div className="valid-feedback">
+                      {userData.username.validationMSG}
+                    </div>
+                    <div className="invalid-feedback">
+                      {userData.username.validationMSG}
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <div className="form-floating">
+                    <input
+                      type="email"
+                      id="email"
+                      placeholder="Email"
+                      class={`form-control ${userData.email.valid}`}
+                      value={userData.email.data}
+                      onChange={(e) => {
+                        if (
+                          /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(
+                            e.target.value
+                          )
+                        )
+                          userData.email.valid = "";
+                        else {
+                          userData.email.valid = "is-invalid";
+                        }
+                        setUserData({
+                          ...userData,
+                          email: {
+                            ...userData.email,
+                            data: e.target.value,
+                          },
+                        });
+                      }}
+                    />
+                    <label htmlFor="email" className="">
+                      Email
+                    </label>
+                    <div className="invalid-feedback">Enter a valid email</div>
+                  </div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <div className="form-floating">
+                    <input
+                      type="password"
+                      id="password"
+                      placeholder="Password"
+                      class={`form-control ${userData.password.valid}`}
+                      value={userData.password.data}
+                      new-password
+                      onChange={(e) => {
+                        validatePassword(e.target.value);
+                        setUserData({
+                          ...userData,
+                          password: {
+                            ...userData.password,
+                            data: e.target.value,
+                          },
+                        });
+                      }}
+                    />
+                    <label htmlFor="password" className="">
+                      Password
+                    </label>
+                    <div className="valid-feedback">Looks okay</div>
+                    <div className="invalid-feedback">
+                      Password must contain:
+                      <ul>
+                        {!/.{8,}/.test(userData.password.data) && (
+                          <li>At least 8 characters</li>
+                        )}
+                        {!/(?=.*[a-z])/.test(userData.password.data) && (
+                          <li>Lowercase</li>
+                        )}
+                        {!/(?=.*[A-Z])/.test(userData.password.data) && (
+                          <li>Uppercase</li>
+                        )}
+                        {!/(?=.*[0-9])/.test(userData.password.data) && (
+                          <li>Number</li>
+                        )}
+                        {!/(?=.*\W)/.test(userData.password.data) && (
+                          <li>Symbols</li>
+                        )}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <div className="form-floating">
+                    <input
+                      type="password"
+                      id="cPassword"
+                      placeholder="Confirm Password"
+                      new-password
+                      class={`form-control ${userData.cPassword.valid}`}
+                      value={userData.cPassword.data}
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          if (e.target.value != userData.password.data) {
+                            userData.cPassword.valid = "is-invalid";
+                          } else userData.cPassword.valid = "is-valid";
+                        } else userData.cPassword.valid = "is-invalid";
+                        setUserData({
+                          ...userData,
+                          cPassword: {
+                            ...userData.cPassword,
+                            data: e.target.value,
+                          },
+                        });
+                      }}
+                    />
+                    <label htmlFor="cPassword" className="">
+                      Confirm Password
+                    </label>
+                    <div className="valid-feedback">Looks okay</div>
+                    <div className="invalid-feedback">Incorrect password</div>
+                  </div>
+                </div>
+                <button
+                  className="btn btn-primary col-md-6"
+                  type="submit"
+                  disabled={submitted}
+                >
+                  {submitted ? (
+                    <div
+                      className="spinner-border text-light me-3"
+                      role="status"
+                    >
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  ) : null}
+                  Signup
+                </button>
+              </form>
+            </div>
+            <div className="col-12">
+              <p className="lead">
+                Already have an account? <Link to="/login">Login</Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>
-</div>
     </>
   );
 }

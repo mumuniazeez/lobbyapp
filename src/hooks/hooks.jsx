@@ -111,6 +111,7 @@ const useServer = (
     .then((res) => res.json())
     .then((data) => {
       state(data);
+      console.log(data);
     })
     .catch((err) => {
       usePrompt(
