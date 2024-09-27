@@ -106,6 +106,7 @@ const useServer = (
     headers: myHeaders,
     body: body ? JSON.stringify(body) : null,
     redirect: "follow",
+    mode: "no-cors",
   };
 
   fetch(`https://lobbyserver.vercel.app${endpoint}`, option)
