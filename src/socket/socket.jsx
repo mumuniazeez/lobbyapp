@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-let socketIoConnection = io("http://localhost:3005");
+let socketIoConnection = io("https://lobbyserver.vercel.app/");
 
 window.onbeforeunload = () => {
   socketIoConnection.disconnect();
