@@ -107,6 +107,8 @@ const useServer = (
     body: body ? JSON.stringify(body) : null,
     redirect: "follow",
   };
+  // http://localhost:3000
+  // https://lobbyserver.onrender.com
   fetch(`https://lobbyserver.onrender.com${endpoint}`, option)
     .then((res) => res.json())
     .then((data) => {
