@@ -32,6 +32,7 @@ export default function Chats({ communityId, roomId }) {
   });
   const [isMobile, setIsMobile] = useState(false);
   const [myProfile, setMyProfile] = useState(null);
+  const [unSentMessages, setUnSentMessages] = useState([]);
 
   window.addEventListener("resize", () =>
     setIsMobile(window.innerWidth <= 762)
@@ -66,7 +67,7 @@ export default function Chats({ communityId, roomId }) {
     if (messages && chatSpaceRef.current) {
       chatSpaceRef.current.scrollTo(0, chatSpaceRef.current.scrollHeight);
     }
-  }, [messages, chatSpaceRef.current]);
+  }, [messages, unSentMessages, chatSpaceRef.current]);
 
   window.onbeforeunload = () => {
     if (socketRef.current && messageInfo.username) {
@@ -85,6 +86,9 @@ export default function Chats({ communityId, roomId }) {
       });
       socketRef.current.on("sendMessage", (msg) => {
         setMessages((prevMessages) => [...prevMessages, msg]);
+        setUnSentMessages(
+          unSentMessages.filter((message) => message.message !== msg.message)
+        );
       });
     }
 
@@ -121,11 +125,45 @@ export default function Chats({ communityId, roomId }) {
 
   const sendMessage = () => {
     if (messageInfo.message.trim()) {
+      const newMessage = { ...messageInfo, status: "unsent" };
+      setUnSentMessages([...unSentMessages, newMessage]);
       socketRef.current.emit("sendMessage", messageInfo);
       setMessageInfo({ ...messageInfo, message: "" });
     }
   };
 
+  const UnsentMessages = () => {
+    return (
+      <div>
+        {unSentMessages.map((message) => (
+          <div key={message.id}>
+            <div className="container w-100 mb-2 mt-2">
+              <div
+                className="p-2 rounded-top-3 d-flex ms-auto"
+                style={{
+                  width: "fit-content",
+                  maxWidth: "70%",
+                }}
+              >
+                <div className="p-2 rounded-bottom-3 message-container text-bg-primary ms-auto rounded-start-3">
+                  <span style={{ fontSize: "10pt" }}>{message.username}</span>
+
+                  <p>{message.message}</p>
+
+                  <span
+                    className="d-block lead w-100 text-end"
+                    style={{ fontSize: "8pt" }}
+                  >
+                    Sending...
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
   const handleMessageChange = (e) => {
     e.target.style.height = "auto";
     const { scrollHeight } = e.target;
@@ -146,7 +184,7 @@ export default function Chats({ communityId, roomId }) {
 
   let prevDate = null;
 
-  const checkDate = (timestamp) => {
+  const renderDate = (timestamp) => {
     let chatDateObj = new Date(timestamp);
     let currentDateObj = new Date();
     let chatDate = `${chatDateObj.getDate()}/${chatDateObj.getMonth()}/${chatDateObj.getFullYear()}`;
@@ -156,17 +194,12 @@ export default function Chats({ communityId, roomId }) {
     }/${currentDateObj.getMonth()}/${currentDateObj.getFullYear()}`;
     let currentDate = `${currentDateObj.getDate()}/${currentDateObj.getMonth()}/${currentDateObj.getFullYear()}`;
 
-    if (!prevDate || chatDate != prevDate) {
-      prevDate = chatDate;
-
-      if (chatDate == currentDate) {
-        return "Today";
-      } else if (chatDate == yesterdayDate) {
-        return "Yesterday";
-      }
-      return chatDate;
+    if (chatDate == currentDate) {
+      return "Today";
+    } else if (chatDate == yesterdayDate) {
+      return "Yesterday";
     }
-    return null;
+    return chatDate;
   };
 
   const getDate = (timestamp) => {
@@ -252,16 +285,18 @@ export default function Chats({ communityId, roomId }) {
                 <>
                   <h6 className="text-center my-3">{roomInfo.name}</h6>
                   <div>
-                    {messages.map((message) => {
+                    {messages.map((message, index) => {
                       return (
                         <div key={message.id}>
-                          {checkDate(message.createdat) ? (
+                          {index === 0 ||
+                          renderDate(message.createdat) !==
+                            renderDate(messages[index - 1].createdat) ? (
                             <div className="container d-flex justify-content-center position-sticky top-0">
                               <div
                                 className="text-bg-secondary rounded-3 text-center p-1"
                                 style={{ fontSize: "10pt" }}
                               >
-                                <span>{getDate(message.createdat)}</span>
+                                <span>{renderDate(message.createdat)}</span>
                               </div>
                             </div>
                           ) : null}
@@ -418,6 +453,7 @@ export default function Chats({ communityId, roomId }) {
               </Link>
             </div>
           )}
+          {unSentMessages.length > 0 && <UnsentMessages />}
         </div>
         {communityInfo.isInCommunity && messages ? (
           <div
