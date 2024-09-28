@@ -97,7 +97,7 @@ export default function Chats({ communityId, roomId }) {
         socketRef.current.emit("leaveRoom", messageInfo);
       }
     };
-  }, [messageInfo.username]);
+  }, [messageInfo.username, roomInfo]);
 
   useEffect(() => {
     // setTimeout(() => {
@@ -185,24 +185,6 @@ export default function Chats({ communityId, roomId }) {
   let prevDate = null;
 
   const renderDate = (timestamp) => {
-    let chatDateObj = new Date(timestamp);
-    let currentDateObj = new Date();
-    let chatDate = `${chatDateObj.getDate()}/${chatDateObj.getMonth()}/${chatDateObj.getFullYear()}`;
-
-    let yesterdayDate = `${
-      currentDateObj.getDate() - 1
-    }/${currentDateObj.getMonth()}/${currentDateObj.getFullYear()}`;
-    let currentDate = `${currentDateObj.getDate()}/${currentDateObj.getMonth()}/${currentDateObj.getFullYear()}`;
-
-    if (chatDate == currentDate) {
-      return "Today";
-    } else if (chatDate == yesterdayDate) {
-      return "Yesterday";
-    }
-    return chatDate;
-  };
-
-  const getDate = (timestamp) => {
     let chatDateObj = new Date(timestamp);
     let currentDateObj = new Date();
     let chatDate = `${chatDateObj.getDate()}/${chatDateObj.getMonth()}/${chatDateObj.getFullYear()}`;

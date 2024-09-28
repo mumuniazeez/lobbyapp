@@ -44,7 +44,7 @@ export default function Signup() {
       if (usernameRegex.test(username)) {
         // /user/profile/:username
         let data = await fetch(
-          `http://localhost:3000/user/profile/@${username}`
+          `https://lobbyserver.onrender.com/user/profile/@${username}`
         );
 
         console.log(data);
