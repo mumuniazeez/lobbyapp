@@ -4,6 +4,7 @@ import { useAlert, useServer } from "../hooks/hooks";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 export default function Signup() {
+  document.title = "Sign up | Lobby";
   const nav = useNavigate();
   const [userData, setUserData] = useState({
     firstName: {
@@ -100,7 +101,7 @@ export default function Signup() {
   useEffect(() => {
     setSubmitted(false);
     if (!serverData) return;
-    if (serverData.message == "User created successfully!") {
+    if (serverData.message === "User created successfully!") {
       useAlert(serverData.message);
       nav("/login");
     }

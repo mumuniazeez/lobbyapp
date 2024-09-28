@@ -10,6 +10,8 @@ import { useServer } from "../hooks/hooks";
 import LoadingAnimation from "./LoadingAnimation";
 
 export default function MobileNav() {
+  document.title = "Lobby";
+
   let { pathname, search } = useLocation();
 
   let urlSearchParam = new URLSearchParams(search);
@@ -22,16 +24,16 @@ export default function MobileNav() {
   useEffect(() => {
     useServer(`/user/me`, "GET", (res) => {
       if (
-        res.message == "Unauthorized" ||
-        res.message == "Error verifying token" ||
-        res.message == "Failed to fetch"
+        res.message === "Unauthorized" ||
+        res.message === "Error verifying token" ||
+        res.message === "Failed to fetch"
       ) {
         setAsLoggedIn(false);
         sessionStorage.setItem("urlRef", `${pathname}${search}`);
         nav("/login");
       } else {
         localStorage.setItem("theme", res.theme);
-        if (res.theme == "system") {
+        if (res.theme === "system") {
           window.matchMedia &&
           window.matchMedia("(prefers-color-scheme: dark)").matches
             ? (document.body.dataset.bsTheme = "dark")
@@ -72,7 +74,7 @@ export default function MobileNav() {
                   <FontAwesomeIcon
                     icon={faUsers}
                     className={`p-1 w-25 px-4 ${
-                      pathname == "/" ? "text-bg-light rounded-pill" : ""
+                      pathname === "/" ? "text-bg-light rounded-pill" : ""
                     }`}
                   />
                   <small style={{ fontSize: "10pt" }}>Communities</small>
@@ -86,7 +88,7 @@ export default function MobileNav() {
                   <FontAwesomeIcon
                     icon={faNewspaper}
                     className={`p-1 w-25 px-4 ${
-                      pathname == "/discover"
+                      pathname === "/discover"
                         ? "text-bg-light rounded-pill"
                         : ""
                     }`}
@@ -102,7 +104,7 @@ export default function MobileNav() {
                   <FontAwesomeIcon
                     icon={faUser}
                     className={`p-1 w-25 px-4 ${
-                      pathname + search == "/settings?tab=profile"
+                      pathname + search === "/settings?tab=profile"
                         ? "text-bg-light rounded-pill"
                         : ""
                     }`}

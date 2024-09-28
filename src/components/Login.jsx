@@ -3,6 +3,7 @@ import { useServer, useAlert } from "../hooks/hooks";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function Login() {
+  document.title = "Login | Lobby";
   const [userData, setUserData] = useState({
     userId: {
       data: "",

@@ -57,7 +57,7 @@ export default function Home() {
 
       if (!communities) return;
       let currentCom = communities.filter(
-        (community) => community.id == messageInfo.communityid
+        (community) => community.id === messageInfo.communityid
       )[0];
 
       let i = communities.findIndex(currentCom);
@@ -83,7 +83,7 @@ export default function Home() {
   useEffect(() => {
     if (communityId || roomId) {
       useServer(`/community/profile/${communityId}`, "get", setCommunityInfo);
-      // setCommunityInfo(communities.filter(community => community.id == communityId))
+      // setCommunityInfo(communities.filter(community => community.id === communityId))
 
       useServer(`/community/rooms/${communityId}`, "get", setRooms);
     } else {
@@ -164,7 +164,7 @@ export default function Home() {
         ) : null}
         <div className="container overflow-hidden overflow-y-scroll h-75">
           {communities && !communityId ? (
-            typeof communities.message == "string" ? (
+            typeof communities.message === "string" ? (
               <div className="container text-center py-5">
                 <FontAwesomeIcon
                   icon={faPlus}
@@ -257,7 +257,7 @@ export default function Home() {
                           >
                             <FontAwesomeIcon
                               icon={
-                                room.type == "announcement" ? faBell : faHouse
+                                room.type === "announcement" ? faBell : faHouse
                               }
                             />
                           </div>

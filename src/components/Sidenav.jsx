@@ -15,6 +15,7 @@ import { useServer, usePrompt } from "../hooks/hooks";
 import LoadingAnimation from "./LoadingAnimation";
 
 export default function Sidenav() {
+  document.title = "Lobby";
   // /community/myCommunities
   const nav = useNavigate();
   const [asLoggedIn, setAsLoggedIn] = useState(false);
@@ -25,7 +26,7 @@ export default function Sidenav() {
   let { pathname, search } = useLocation();
 
   useEffect(() => {
-    if (localStorage.theme == "system") {
+    if (localStorage.theme === "system") {
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
         ? (document.body.dataset.bsTheme = "dark")
@@ -36,15 +37,15 @@ export default function Sidenav() {
   useEffect(() => {
     useServer(`/user/me`, "GET", (res) => {
       if (
-        res.message == "Unauthorized" ||
-        res.message == "Error verifying token"
+        res.message === "Unauthorized" ||
+        res.message === "Error verifying token"
       ) {
         setAsLoggedIn(false);
         sessionStorage.setItem("urlRef", `${pathname}${search}`);
         nav("/login");
       } else {
         localStorage.setItem("theme", res.theme);
-        if (res.theme == "system") {
+        if (res.theme === "system") {
           window.matchMedia &&
           window.matchMedia("(prefers-color-scheme: dark)").matches
             ? (document.body.dataset.bsTheme = "dark")
@@ -62,8 +63,8 @@ export default function Sidenav() {
   }, []);
 
   // window.addEventListener("click", (e) => {
-  //   console.log(sNav.current == e.target);
-  //   if (!sNav.current && sNav.current == e.target) return;
+  //   console.log(sNav.current === e.target);
+  //   if (!sNav.current && sNav.current === e.target) return;
 
   //   setExpandMenu(false);
   //   sNav.current.classList.remove("nav-expanded");
@@ -129,7 +130,7 @@ export default function Sidenav() {
                 >
                   <FontAwesomeIcon
                     className={`p-2 fs-6 ${
-                      pathname == "/" ? "" : "text-black"
+                      pathname === "/" ? "" : "text-black"
                     }`}
                     icon={faUsers}
                   />
@@ -143,7 +144,7 @@ export default function Sidenav() {
                 >
                   <FontAwesomeIcon
                     className={`p-2 fs-5 ${
-                      pathname == "/discover" ? "" : "text-black"
+                      pathname === "/discover" ? "" : "text-black"
                     }`}
                     icon={faNewspaper}
                   />
@@ -159,7 +160,7 @@ export default function Sidenav() {
                 <FontAwesomeIcon
                   icon={faGear}
                   className={`p-2 fs-5 ${
-                    pathname == "/settings" ? "" : "text-black"
+                    pathname === "/settings" ? "" : "text-black"
                   }`}
                 />
                 <span className="ms-3 text-black fs-6">Settings</span>
@@ -171,7 +172,7 @@ export default function Sidenav() {
                 <FontAwesomeIcon
                   icon={faUser}
                   className={`p-2 fs-5 ${
-                    pathname + search == "/settings?tab=profile"
+                    pathname + search === "/settings?tab=profile"
                       ? ""
                       : "text-black"
                   }`}

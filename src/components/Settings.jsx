@@ -111,7 +111,7 @@ export default function Settings() {
                   to="/settings?tab=general"
                   className="rounded bg-body-secondary btn w-100 p-2 text-start "
                   style={{
-                    borderLeft: tab == "general" ? "3px solid #0d6efd" : "",
+                    borderLeft: tab === "general" ? "3px solid #0d6efd" : "",
                   }}
                 >
                   <FontAwesomeIcon icon={faLaptop} className="btn" />
@@ -123,7 +123,7 @@ export default function Settings() {
                   to="/settings?tab=profile"
                   className="rounded bg-body-secondary btn w-100 p-2 text-start "
                   style={{
-                    borderLeft: tab == "profile" ? "3px solid #0d6efd" : "",
+                    borderLeft: tab === "profile" ? "3px solid #0d6efd" : "",
                   }}
                 >
                   <FontAwesomeIcon icon={faUser} className="btn" />
@@ -148,7 +148,7 @@ export default function Settings() {
                   className="rounded bg-body-secondary btn w-100 p-2 text-start "
                   style={{
                     borderLeft:
-                      tab == "personalization" ? "3px solid #0d6efd" : "",
+                      tab === "personalization" ? "3px solid #0d6efd" : "",
                   }}
                 >
                   <FontAwesomeIcon icon={faPaintBrush} className="btn" />
@@ -160,7 +160,7 @@ export default function Settings() {
                   to="/settings?tab=help"
                   className="rounded bg-body-secondary btn w-100 p-2 text-start "
                   style={{
-                    borderLeft: tab == "help" ? "3px solid #0d6efd" : "",
+                    borderLeft: tab === "help" ? "3px solid #0d6efd" : "",
                   }}
                 >
                   <FontAwesomeIcon icon={faExclamationCircle} className="btn" />
@@ -172,7 +172,7 @@ export default function Settings() {
                   to="/settings?tab=invite"
                   className="rounded bg-body-secondary btn w-100 p-2 text-start "
                   style={{
-                    borderLeft: tab == "invite" ? "3px solid #0d6efd" : "",
+                    borderLeft: tab === "invite" ? "3px solid #0d6efd" : "",
                   }}
                 >
                   <FontAwesomeIcon icon={faUserPlus} className="btn" />
@@ -189,15 +189,15 @@ export default function Settings() {
         className={`col-md-8 p-0 ${isMobile && !tab ? "d-none" : ""}`}
         style={{ width: !isMobile ? "68.66666667%" : "100%", height: "100vh" }}
       >
-        {tab == "general" ? (
+        {tab === "general" ? (
           <SettingsGeneral />
-        ) : tab == "profile" ? (
+        ) : tab === "profile" ? (
           <SettingsProfile />
-        ) : tab == "personalization" ? (
+        ) : tab === "personalization" ? (
           <SettingsPersonalization />
-        ) : tab == "help" ? (
+        ) : tab === "help" ? (
           <SettingsHelp />
-        ) : tab == "invite" ? (
+        ) : tab === "invite" ? (
           <SettingsInvite />
         ) : null}
       </div>

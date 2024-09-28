@@ -15,7 +15,7 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { usePrompt, useServer } from "../hooks/hooks";
 import LoadingAnimation from "./LoadingAnimation";
-import { Link, useBeforeUnload, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { socketIoConnection } from "../socket/socket";
 import Linkify from "linkify-react";
 import ReactMarkdown from "react-markdown";
@@ -77,6 +77,7 @@ export default function Chats({ communityId, roomId }) {
 
   useEffect(() => {
     if (messageInfo.username) {
+      setMessages(null);
       socketRef.current = socketIoConnection;
 
       socketRef.current.emit("joinRoom", messageInfo);
@@ -85,6 +86,7 @@ export default function Chats({ communityId, roomId }) {
         setMessages(msg);
       });
       socketRef.current.on("sendMessage", (msg) => {
+        console.log("mmm");
         setMessages((prevMessages) => [...prevMessages, msg]);
         setUnSentMessages(
           unSentMessages.filter((message) => message.message !== msg.message)
@@ -97,28 +99,12 @@ export default function Chats({ communityId, roomId }) {
         socketRef.current.emit("leaveRoom", messageInfo);
       }
     };
-  }, [messageInfo.username, roomInfo]);
+  }, [messageInfo.username]);
 
   useEffect(() => {
-    // setTimeout(() => {
-    //   if (!messages) {
-    //     usePrompt(
-    //       "Error loading message",
-    //       "An error occur while loading message. Try again <br/> If error continue restart the page.",
-    //       "primary",
-    //       "Restart Page",
-    //       () => {
-    //         location.reload();
-    //       },
-    //       "primary",
-    //       "Try again"
-    //     );
-    //   }
-    // }, 10000);
     return () => {
       if (socketRef.current && messageInfo.username) {
         socketRef.current.emit("leaveRoom", messageInfo);
-        socketRef.current.disconnect();
       }
     };
   }, []);
@@ -178,11 +164,9 @@ export default function Chats({ communityId, roomId }) {
     let dateObj = new Date(timestamp);
 
     return `${
-      dateObj.getHours() < 12 ? dateObj.getHours() : dateObj.getHours() - 12
+      dateObj.getHours() < 13 ? dateObj.getHours() : dateObj.getHours() - 12
     }:${dateObj.getMinutes()} ${dateObj.getHours() < 12 ? "AM" : "PM"}`;
   };
-
-  let prevDate = null;
 
   const renderDate = (timestamp) => {
     let chatDateObj = new Date(timestamp);
@@ -194,9 +178,9 @@ export default function Chats({ communityId, roomId }) {
     }/${currentDateObj.getMonth()}/${currentDateObj.getFullYear()}`;
     let currentDate = `${currentDateObj.getDate()}/${currentDateObj.getMonth()}/${currentDateObj.getFullYear()}`;
 
-    if (chatDate == currentDate) {
+    if (chatDate === currentDate) {
       return "Today";
-    } else if (chatDate == yesterdayDate) {
+    } else if (chatDate === yesterdayDate) {
       return "Yesterday";
     }
     return chatDate;
@@ -258,7 +242,7 @@ export default function Chats({ communityId, roomId }) {
           className="mb-3 overflow-hidden overflow-y-scroll"
           style={{
             scrollBehavior: "smooth",
-            height: isMobile ? "75%" : "78%",
+            height: isMobile ? "75vh" : "78vh",
           }}
         >
           {communityInfo.isInCommunity ? (
@@ -283,7 +267,7 @@ export default function Chats({ communityId, roomId }) {
                             </div>
                           ) : null}
 
-                          {message.type == "normal" ? (
+                          {message.type === "normal" ? (
                             <>
                               <div
                                 className="container w-100 mb-2 mt-2"
@@ -291,7 +275,7 @@ export default function Chats({ communityId, roomId }) {
                               >
                                 <div
                                   className={`p-2 rounded-top-3 d-flex ${
-                                    message.creator == roomInfo.username
+                                    message.creator === roomInfo.username
                                       ? "ms-auto"
                                       : ""
                                   }`}
@@ -312,7 +296,7 @@ export default function Chats({ communityId, roomId }) {
 
                                   <div
                                     className={`p-2 rounded-bottom-3 message-container ${
-                                      message.creator == roomInfo.username
+                                      message.creator === roomInfo.username
                                         ? "text-bg-primary ms-auto rounded-start-3"
                                         : "text-bg-secondary rounded-end-3"
                                     }`}
@@ -351,7 +335,7 @@ export default function Chats({ communityId, roomId }) {
                                 </div>
                               </div>
                             </>
-                          ) : message.type == "notice" ? (
+                          ) : message.type === "notice" ? (
                             <>
                               <div className="container d-flex justify-content-center py-0">
                                 <div
@@ -395,7 +379,7 @@ export default function Chats({ communityId, roomId }) {
                     >
                       <FontAwesomeIcon
                         icon={
-                          roomInfo.type == "announcement" ? faBell : faUsers
+                          roomInfo.type === "announcement" ? faBell : faUsers
                         }
                         style={{ fontSize: "30pt" }}
                       />
@@ -440,7 +424,7 @@ export default function Chats({ communityId, roomId }) {
         {communityInfo.isInCommunity && messages ? (
           <div
             className="container chat-input-field-container d-flex align-items-center justify-content-center"
-            style={{ height: isMobile ? "15%" : "10%" }}
+            style={{ height: isMobile ? "15vh" : "10vh" }}
           >
             {roomInfo.enablemessage || communityInfo.isAdmin ? (
               <>

@@ -41,7 +41,7 @@ export default function SettingsPersonalization() {
     console.log(window.matchMedia("(prefers-color-scheme: dark)").matches);
     console.log(theme);
 
-    if (theme == "system") {
+    if (theme === "system") {
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
         ? (document.body.dataset.bsTheme = "dark")
@@ -49,7 +49,6 @@ export default function SettingsPersonalization() {
     } else document.body.dataset.bsTheme = theme;
     localStorage.setItem("theme", theme);
   }, [theme]);
-
 
   const changeTheme = (newTheme) => {
     useServer(
@@ -86,7 +85,6 @@ export default function SettingsPersonalization() {
                 </Link>
                 <h6 className="m-0">Personalization</h6>
               </div>
-              
             </div>
           </div>
           <div

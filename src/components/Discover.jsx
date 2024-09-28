@@ -56,7 +56,7 @@ export default function Discover() {
 
   useEffect(() => {
     if (!unFilterCommunities) return;
-    if (typeof unFilterCommunities.message == "string") {
+    if (typeof unFilterCommunities.message === "string") {
       setCommunities(unFilterCommunities);
       return;
     } else {
@@ -78,7 +78,7 @@ export default function Discover() {
     useServer(`/community/leave/${comID}`, "post", (res) => {
       useAlert(
         res.message,
-        res.message == "Cannot leave your own community" ? "danger" : "primary"
+        res.message === "Cannot leave your own community" ? "danger" : "primary"
       );
       useServer("/community/all/", "get", setUnFilterCommunities);
       if (communityId)
@@ -133,7 +133,7 @@ export default function Discover() {
         </div>
         <div className="container overflow-hidden overflow-y-scroll h-75">
           {communities ? (
-            typeof communities.message == "string" ? (
+            typeof communities.message === "string" ? (
               <div className="container text-center py-5">
                 <FontAwesomeIcon
                   icon={faPlus}
