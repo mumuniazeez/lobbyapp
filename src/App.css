@@ -50,9 +50,9 @@ html {
   background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
 }
 
-.chat--container {
+/* .chat--container {
   padding-bottom: 70px !important;
-}
+} */
 
 ::-webkit-scrollbar,
 ::-webkit-scrollbar-corner {

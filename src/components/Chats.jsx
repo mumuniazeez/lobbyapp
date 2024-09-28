@@ -192,7 +192,7 @@ export default function Chats({ communityId, roomId }) {
         className={`container p-0 ${isMobile ? "chat--container" : ""}`}
         style={{
           width: "100%",
-          height: "100vh",
+          height: "100%",
         }}
       >
         <div className="bg-light container w-100">
@@ -242,7 +242,7 @@ export default function Chats({ communityId, roomId }) {
           className="mb-3 overflow-hidden overflow-y-scroll"
           style={{
             scrollBehavior: "smooth",
-            height: isMobile ? "75vh" : "78vh",
+            height: isMobile ? "75%" : "78%",
           }}
         >
           {communityInfo.isInCommunity ? (
@@ -424,7 +424,9 @@ export default function Chats({ communityId, roomId }) {
         {communityInfo.isInCommunity && messages ? (
           <div
             className="container chat-input-field-container d-flex align-items-center justify-content-center"
-            style={{ height: isMobile ? "15vh" : "10vh" }}
+            style={{
+              height: isMobile ? "15%" : "10%",
+            }}
           >
             {roomInfo.enablemessage || communityInfo.isAdmin ? (
               <>
