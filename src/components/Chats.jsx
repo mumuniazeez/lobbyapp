@@ -242,7 +242,7 @@ export default function Chats({ communityId, roomId }) {
           className="mb-3 overflow-hidden overflow-y-scroll"
           style={{
             scrollBehavior: "smooth",
-            height: "calc(86vh - 50px)",
+            height: `calc(${isMobile ? 75 : 86}dvh - 50px)`,
           }}
         >
           {communityInfo.isInCommunity ? (
