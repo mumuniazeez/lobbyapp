@@ -76,7 +76,7 @@ export default function Chats({ communityId, roomId }) {
   };
 
   useEffect(() => {
-    if (messageInfo.username) {
+    if (roomInfo) {
       setMessages(null);
       socketRef.current = socketIoConnection;
 
@@ -99,7 +99,7 @@ export default function Chats({ communityId, roomId }) {
         socketRef.current.emit("leaveRoom", messageInfo);
       }
     };
-  }, [messageInfo.username]);
+  }, [roomInfo]);
 
   useEffect(() => {
     return () => {
