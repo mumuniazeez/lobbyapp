@@ -94,8 +94,8 @@ export default function Sidenav() {
           }}
         >
           <div
-            class={`d-flex flex-column flex-shrink-0 p-0 h-100 align-items-start justify-content-start text-start ${
-              expandMenu ? "nav-expanded border-end shadow rounded-end-3" : ""
+            class={`d-flex flex-column flex-shrink-0 p-0 h-100 align-items-start justify-content-start text-start nav-expanded ${
+              expandMenu ? "active border-end shadow rounded-end-3" : ""
             }`}
             style={{
               width: "65px",

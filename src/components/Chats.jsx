@@ -449,6 +449,7 @@ export default function Chats({ communityId, roomId }) {
                   className="bg-light w-100 px-4 chat-input-field rounded-3 d-flex align-items-center"
                   placeholder="Type your message"
                   value={messageInfo.message}
+                  autoFocus
                   onChange={(e) => {
                     handleMessageChange(e);
                   }}
