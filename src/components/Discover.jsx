@@ -29,7 +29,7 @@ export default function Discover() {
   const [communities, setCommunities] = useState(null);
   const [communityId, setCommunityId] = useState(urlSearchParam.get("cId"));
   const [isMobile, setIsMobile] = useState(false);
-  const [unFilterCommunities, setUnFilterCommunities] = useState([]);
+  const [unFilterCommunities, setUnFilterCommunities] = useState(null);
   window.addEventListener("resize", () =>
     setIsMobile(window.innerWidth <= 762)
   );
