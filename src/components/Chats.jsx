@@ -352,23 +352,25 @@ export default function Chats({ communityId, roomId }) {
                     })}
                   </div>
 
-                  {chatSpaceRef.current &&
-                  chatSpaceRef.current.scrollTop !=
-                    chatSpaceRef.current.scrollHeight ? (
-                    <button
-                      className="position-sticky bottom-0 right-0 btn btn-primary rounded-circle"
-                      onClick={() => {
-                        if (chatSpaceRef.current) {
-                          chatSpaceRef.current.scrollTo(
-                            0,
-                            chatSpaceRef.current.scrollHeight
-                          );
-                        }
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faArrowDown} />
-                    </button>
-                  ) : null}
+                  {/* <div className="position-fixed bottom-0 left-5">
+                    {chatSpaceRef.current &&
+                    chatSpaceRef.current.scrollTop <
+                      chatSpaceRef.current.scrollHeight ? (
+                      <button
+                        className="btn btn-primary rounded-circle"
+                        onClick={() => {
+                          if (chatSpaceRef.current) {
+                            chatSpaceRef.current.scrollTo(
+                              0,
+                              chatSpaceRef.current.scrollHeight
+                            );
+                          }
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faArrowDown} />
+                      </button>
+                    ) : null}
+                  </div> */}
                 </>
               ) : (
                 <div className="container pt-5 d-flex align-items-center justify-content-center">
