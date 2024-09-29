@@ -41,12 +41,9 @@ export default function AboutLobby() {
               <h6 className="m-0">About Lobby</h6>
             </div>
             <div>
-              <FontAwesomeIcon
-                data-bs-toggle="dropdown"
-                icon={faEllipsisVertical}
-                style={{ cursor: "pointer" }}
-                className="me-3"
-              />
+              <button className="btn" data-bs-toggle="dropdown">
+                <FontAwesomeIcon icon={faEllipsisVertical} className="me-3" />
+              </button>
               <ul className="dropdown-menu text-small w-25 pt-3">
                 <li>
                   <button

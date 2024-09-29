@@ -110,12 +110,10 @@ export default function Discover() {
               <h4>Discover</h4>
             </div>
             <div>
-              <span className="me-2">
-                <FontAwesomeIcon
-                  data-bs-toggle="dropdown"
-                  icon={faEllipsisVertical}
-                  style={{ cursor: "pointer" }}
-                />
+              <div className="me-2">
+                <button className="btn" data-bs-toggle="dropdown">
+                  <FontAwesomeIcon icon={faEllipsisVertical} />
+                </button>
                 <ul className="dropdown-menu text-small pt-3">
                   <li>
                     <Link to="/settings" className="dropdown-item">
@@ -126,7 +124,7 @@ export default function Discover() {
                     </Link>
                   </li>
                 </ul>
-              </span>
+              </div>
             </div>
           </div>
           <div className="search">

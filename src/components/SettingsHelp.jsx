@@ -1,20 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
-  faEllipsisVertical,
   faFile,
   faInfoCircle,
   faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { useServer, usePrompt } from "../hooks/hooks";
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import LoadingAnimation from "./LoadingAnimation";
-import Chats from "./Chats";
-import CreateCommunityModal from "./CreateCommunityModal";
-import CreateRoomModal from "./CreateRoomModal";
-import CommunityProfile from "./CommunityProfile";
-import { socketIoConnection } from "../socket/socket";
+import { Link } from "react-router-dom";
 
 export default function SettingsHelp() {
   const [isMobile, setIsMobile] = useState(false);

@@ -100,8 +100,6 @@ export default function Home() {
   //   }
   // }, [searchData]);
 
-  
-
   return (
     <>
       <div
@@ -119,12 +117,10 @@ export default function Home() {
                 <h4>Communities</h4>
               </div>
               <div>
-                <span className="me-2">
-                  <FontAwesomeIcon
-                    data-bs-toggle="dropdown"
-                    icon={faEllipsisVertical}
-                    style={{ cursor: "pointer" }}
-                  />
+                <div>
+                  <button className="me-2 btn" data-bs-toggle="dropdown">
+                    <FontAwesomeIcon icon={faEllipsisVertical} />
+                  </button>
                   <ul className="dropdown-menu text-small">
                     <li>
                       <button className="dropdown-item">
@@ -140,6 +136,8 @@ export default function Home() {
                           Create Community
                         </span>
                       </button>
+                    </li>
+                    <li>
                       <Link to="/settings" className="dropdown-item">
                         <span className="">
                           <FontAwesomeIcon icon={faGear} className="me-2" />
@@ -148,7 +146,7 @@ export default function Home() {
                       </Link>
                     </li>
                   </ul>
-                </span>
+                </div>
               </div>
             </div>
             <div className="search">

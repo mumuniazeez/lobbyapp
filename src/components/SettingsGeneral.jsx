@@ -1,31 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faSearch,
-  faLaptop,
-  faMessage,
-  faArrowLeft,
-  faUsers,
-  faHouse,
-  faPlusCircle,
-  faEllipsisVertical,
-  faPlus,
-  faBell,
-  faSadCry,
-  faArrowUpRightFromSquare,
-  faKey,
-  faPaintBrush,
-  faExclamationCircle,
-  faGlobe,
-} from "@fortawesome/free-solid-svg-icons";
-import { useServer } from "../hooks/hooks";
+import { faArrowLeft, faGlobe } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
-import LoadingAnimation from "./LoadingAnimation";
-import Chats from "./Chats";
-import CreateCommunityModal from "./CreateCommunityModal";
-import CreateRoomModal from "./CreateRoomModal";
-import CommunityProfile from "./CommunityProfile";
-import { socketIoConnection } from "../socket/socket";
+import { Link } from "react-router-dom";
 
 export default function SettingsGeneral() {
   const [isMobile, setIsMobile] = useState(false);
@@ -56,7 +32,6 @@ export default function SettingsGeneral() {
               </Link>
               <h6 className="m-0">General</h6>
             </div>
-            
           </div>
         </div>
         <div

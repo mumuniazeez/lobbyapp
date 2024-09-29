@@ -242,7 +242,7 @@ export default function Chats({ communityId, roomId }) {
           className="mb-3 overflow-hidden overflow-y-scroll"
           style={{
             scrollBehavior: "smooth",
-            height: `calc(${isMobile ? 80 : 86}dvh - 50px)`,
+            height: `calc(${isMobile ? 87 : 90}dvh - 50px)`,
           }}
         >
           {communityInfo.isInCommunity ? (
@@ -426,10 +426,19 @@ export default function Chats({ communityId, roomId }) {
         {communityInfo.isInCommunity && messages ? (
           <div
             className="container py-0 chat-input-field-container d-flex align-items-center justify-content-center"
-            style={{
-              flex: 1,
-              overflowY: "hidden",
-            }}
+            style={
+              isMobile
+                ? {
+                    position: "fixed",
+                    right: 0,
+                    left: 0,
+                    button: 0,
+                  }
+                : {
+                    flex: 1,
+                    overflowY: "hidden",
+                  }
+            }
           >
             {roomInfo.enablemessage || communityInfo.isAdmin ? (
               <>
