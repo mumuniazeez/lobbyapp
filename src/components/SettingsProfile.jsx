@@ -1,36 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faSearch,
-  faLaptop,
-  faMessage,
   faArrowLeft,
   faUsers,
-  faHouse,
-  faPlusCircle,
   faEllipsisVertical,
-  faPlus,
-  faBell,
-  faSadCry,
-  faArrowUpRightFromSquare,
-  faKey,
-  faPaintBrush,
-  faExclamationCircle,
-  faGlobe,
-  faPencil,
-  faBoxArchive,
-  faTrash,
   faSignOut,
   faPen,
 } from "@fortawesome/free-solid-svg-icons";
 import { useServer, usePrompt } from "../hooks/hooks";
-import { useState, useEffect, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import LoadingAnimation from "./LoadingAnimation";
-import Chats from "./Chats";
-import CreateCommunityModal from "./CreateCommunityModal";
-import CreateRoomModal from "./CreateRoomModal";
-import CommunityProfile from "./CommunityProfile";
-import { socketIoConnection } from "../socket/socket";
 
 export default function SettingsProfile() {
   const [myProfile, setMyProfile] = useState(null);
@@ -83,12 +62,10 @@ export default function SettingsProfile() {
                 <h6 className="m-0">Profile</h6>
               </div>
               <div>
-                <FontAwesomeIcon
-                  data-bs-toggle="dropdown"
-                  icon={faEllipsisVertical}
-                  style={{ cursor: "pointer" }}
-                  className="me-3"
-                />
+                <button className="btn me-3" data-bs-toggle="dropdown">
+                  <FontAwesomeIcon icon={faEllipsisVertical} />
+                </button>
+
                 <ul className="dropdown-menu text-small w-25 pt-3">
                   <li>
                     <button className="dropdown-item" onClick={signOut}>
