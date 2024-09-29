@@ -242,7 +242,7 @@ export default function Chats({ communityId, roomId }) {
           className="mb-3 overflow-hidden overflow-y-scroll"
           style={{
             scrollBehavior: "smooth",
-            height: `calc(${isMobile ? 75 : 86}dvh - 50px)`,
+            height: `calc(${isMobile ? 80 : 86}dvh - 50px)`,
           }}
         >
           {communityInfo.isInCommunity ? (
@@ -435,7 +435,7 @@ export default function Chats({ communityId, roomId }) {
                   name=""
                   id=""
                   rows={1}
-                  className="w-100 px-4 chat-input-field rounded-3 d-flex align-items-center"
+                  className="bg-light w-100 px-4 chat-input-field rounded-3 d-flex align-items-center"
                   placeholder="Type your message"
                   value={messageInfo.message}
                   onChange={(e) => {
