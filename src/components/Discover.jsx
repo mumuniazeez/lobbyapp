@@ -66,15 +66,22 @@ export default function Discover() {
     }
   }, [unFilterCommunities]);
 
-  const joinCommunity = (comID) => {
+  const joinCommunity = (comID, e) => {
+    e.target.disabled = true;
+
     useServer(`/community/join/${comID}`, "post", (res) => {
       useAlert(res.message);
       useServer("/community/all/", "get", setUnFilterCommunities);
       if (communityId)
         useServer(`/community/profile/${communityId}`, "get", setCommunityInfo);
+      setTimeout(() => {
+        e.target.disabled = false;
+      }, 2000);
     });
   };
-  const leaveCommunity = (comID) => {
+  const leaveCommunity = (comID, e) => {
+    e.target.disabled = true;
+
     useServer(`/community/leave/${comID}`, "post", (res) => {
       useAlert(
         res.message,
@@ -83,6 +90,9 @@ export default function Discover() {
       useServer("/community/all/", "get", setUnFilterCommunities);
       if (communityId)
         useServer(`/community/profile/${communityId}`, "get", setCommunityInfo);
+      setTimeout(() => {
+        e.target.disabled = false;
+      }, 2000);
     });
   };
 
@@ -171,7 +181,7 @@ export default function Discover() {
                           {isMobile ? (
                             <button
                               className="btn btn-outline-primary rounded-pill"
-                              onClick={() => joinCommunity(community.id)}
+                              onClick={(e) => joinCommunity(community.id, e)}
                             >
                               Join <FontAwesomeIcon icon={faSignIn} />
                             </button>
@@ -273,7 +283,7 @@ export default function Discover() {
                           </Link>
                           <button
                             className="btn btn-outline-danger rounded-pill"
-                            onClick={() => leaveCommunity(communityInfo.id)}
+                            onClick={(e) => leaveCommunity(communityInfo.id, e)}
                           >
                             Leave <FontAwesomeIcon icon={faSignOut} />
                           </button>
@@ -281,7 +291,7 @@ export default function Discover() {
                       ) : (
                         <button
                           className="btn btn-outline-primary"
-                          onClick={() => joinCommunity(communityInfo.id)}
+                          onClick={(e) => joinCommunity(communityInfo.id, e)}
                         >
                           Join <FontAwesomeIcon icon={faSignIn} />
                         </button>

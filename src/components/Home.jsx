@@ -100,6 +100,8 @@ export default function Home() {
   //   }
   // }, [searchData]);
 
+  
+
   return (
     <>
       <div
