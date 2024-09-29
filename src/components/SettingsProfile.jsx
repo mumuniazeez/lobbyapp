@@ -136,11 +136,11 @@ export default function SettingsProfile() {
               </p>
             </div>
             <div className="px-5 py-3 mb-5 container bg-light">
-              <button className="btn btn-primary me-3" onClick={signOut}>
+              <button className="btn btn-primary me-3 my-1" onClick={signOut}>
                 <FontAwesomeIcon icon={faPen} className="me-2" />
                 Edit profile
               </button>
-              <button className="btn btn-danger me-3" onClick={signOut}>
+              <button className="btn btn-danger me-3 my-1" onClick={signOut}>
                 <FontAwesomeIcon icon={faSignOut} className="me-2" />
                 Sign out
               </button>
