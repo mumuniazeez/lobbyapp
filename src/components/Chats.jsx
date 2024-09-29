@@ -457,6 +457,7 @@ export default function Chats({ communityId, roomId }) {
                 {messageInfo.message.trim() ? (
                   <button
                     className="btn btn-light ms-2 me-2"
+                    style={{ height: "55px" }}
                     onClick={sendMessage}
                   >
                     <FontAwesomeIcon icon={faPaperPlane} />
