@@ -340,7 +340,7 @@ export default function Home() {
           <div
             className="container text-end"
             style={{
-              marginTop: "-50px",
+              marginTop: "-80px",
               paddingRight: "30px",
             }}
           >
