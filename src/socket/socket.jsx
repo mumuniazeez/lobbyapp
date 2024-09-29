@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-let socketIoConnection = io("https://lobbyserver.onrender.com");
+let socketIoConnection = io(import.meta.env.VITE_SERVER_URL);
 
 window.onbeforeunload = () => {
   socketIoConnection.disconnect();
