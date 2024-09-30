@@ -131,3 +131,19 @@ html {
   text-align: start;
   background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
 }
+
+.animatedLogo {
+  animation: logoAnimation 2s ease-in-out infinite;
+}
+
+@keyframes logoAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100%{
+    transform: scale(1);
+  }
+}

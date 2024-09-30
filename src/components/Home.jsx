@@ -22,6 +22,7 @@ import CreateCommunityModal from "./CreateCommunityModal";
 import CreateRoomModal from "./CreateRoomModal";
 import CommunityProfile from "./CommunityProfile";
 import { socketIoConnection } from "../socket/socket";
+import lobbyLogo from "../lobbyLogo.png";
 
 export default function Home() {
   document.title = "Community | Lobby";
@@ -371,7 +372,7 @@ export default function Home() {
         ) : (
           <>
             <div className="container w-100 h-100 d-flex align-items-center justify-content-center text-primary flex-column">
-              <FontAwesomeIcon icon={faMessage} style={{ fontSize: "50pt" }} />
+              <img src={lobbyLogo} alt="lobby logo" width={100} />
 
               <h1>LOBBY WEB</h1>
               <p>

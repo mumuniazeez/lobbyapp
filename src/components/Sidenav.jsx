@@ -12,7 +12,7 @@ import {
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { useServer, usePrompt } from "../hooks/hooks";
-import LoadingAnimation from "./LoadingAnimation";
+import lobbyLogo from "../lobbyLogo.png";
 
 export default function Sidenav() {
   document.title = "Lobby";
@@ -188,12 +188,10 @@ export default function Sidenav() {
     </>
   ) : (
     <div
-      className="container-fluid d-flex align-items-center justify-content-center"
+      className="container-fluid d-flex align-items-center justify-content-center flex-column"
       style={{ height: "100vh" }}
     >
-      <div className="container py-5">
-        <LoadingAnimation addWhiteSpace={false} />
-      </div>
+        <img src={lobbyLogo} alt="lobby logo" width={100} className="animatedLogo" />
     </div>
   );
 }

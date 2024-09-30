@@ -1,11 +1,16 @@
-export default function LoadingAnimation({addWhiteSpace = true}) {
+import lobbyLogo from "../lobbyLogo.png";
+
+export default function LoadingAnimation({ addWhiteSpace = true }) {
   return (
     <div
       className={`container text-center ${addWhiteSpace ? "my-5 py-5" : ""}`}
     >
-      <div className="spinner-border text-primary" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </div>
+      <img
+        src={lobbyLogo}
+        alt="lobby logo"
+        width={50}
+        className="animatedLogo"
+      />
     </div>
   );
 }
