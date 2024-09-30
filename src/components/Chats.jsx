@@ -245,7 +245,7 @@ export default function Chats({ communityId, roomId }) {
           className="mb-3 overflow-hidden overflow-y-scroll"
           style={{
             scrollBehavior: "smooth",
-            height: `calc(100vh - 140px)`,
+            height: `calc(87dvh - 50px)`,
           }}
         >
           {communityInfo.isInCommunity ? (
