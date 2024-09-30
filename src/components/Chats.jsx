@@ -468,6 +468,11 @@ export default function Chats({ communityId, roomId }) {
                             message: messageInfo.message + e.emoji,
                           });
                         }}
+                        theme={
+                          localStorage.theme === "system"
+                            ? "auto"
+                            : localStorage.theme
+                        }
                       />
                     </li>
                   </ul>
