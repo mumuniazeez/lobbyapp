@@ -11,7 +11,9 @@ import {
   faBell,
   faArrowUpRightFromSquare,
   faPlus,
+  faFaceSmile,
 } from "@fortawesome/free-solid-svg-icons";
+import EmojiPicker from "emoji-picker-react";
 import { useState, useEffect, useRef } from "react";
 import { usePrompt, useServer } from "../hooks/hooks";
 import LoadingAnimation from "./LoadingAnimation";
@@ -158,6 +160,7 @@ export default function Chats({ communityId, roomId }) {
       ...messageInfo,
       message: e.target.value,
     });
+    !messageInfo.message ? (e.target.style.height = "50px") : null;
   };
 
   const getTime = (timestamp) => {
@@ -436,23 +439,51 @@ export default function Chats({ communityId, roomId }) {
                   }
                 : {
                     flex: 1,
-                    overflowY: "hidden",
                   }
             }
           >
             {roomInfo.enablemessage || communityInfo.isAdmin ? (
               <>
+                <div class="dropup">
+                  <button
+                    class="btn btn-dark rounded-end-0 py-0 border-end"
+                    type="button"
+                    id="dropupMenuButton"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    style={{ height: messageInfo.message ? "55px" : "50px" }}
+                  >
+                    <FontAwesomeIcon icon={faFaceSmile} />
+                  </button>
+                  <ul
+                    class="dropdown-menu"
+                    style={{ zIndex: 99999999999999 }}
+                    aria-labelledby="dropupMenuButton"
+                  >
+                    <li>
+                      <EmojiPicker
+                        onEmojiClick={(e) => {
+                          setMessageInfo({
+                            ...messageInfo,
+                            message: messageInfo.message + e.emoji,
+                          });
+                        }}
+                      />
+                    </li>
+                  </ul>
+                </div>
                 <textarea
                   name=""
                   id=""
                   rows={1}
-                  className="bg-light w-100 px-4 chat-input-field rounded-3 d-flex align-items-center"
+                  className="bg-light w-100 px-4 chat-input-field rounded-3 d-flex align-items-center rounded-start-0"
                   placeholder="Type your message"
                   value={messageInfo.message}
                   autoFocus
                   onChange={(e) => {
                     handleMessageChange(e);
                   }}
+                  style={!messageInfo.message ? { height: "50px" } : null}
                 ></textarea>
                 {messageInfo.message.trim() ? (
                   <button
