@@ -8,6 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import { useServer } from "../hooks/hooks";
 import LoadingAnimation from "./LoadingAnimation";
+import lobbyLogo from "../lobbyLogo.png";
 
 export default function MobileNav() {
   document.title = "Lobby";
@@ -118,10 +119,16 @@ export default function MobileNav() {
       ) : null}
     </>
   ) : (
-    <div className="container-fluid" style={{ height: "100vh" }}>
-      <div className="container py-5">
-        <LoadingAnimation addWhiteSpace={false} />
-      </div>
+    <div
+      className="container-fluid d-flex align-items-center justify-content-center flex-column"
+      style={{ height: "100vh" }}
+    >
+      <img
+        src={lobbyLogo}
+        alt="lobby logo"
+        width={100}
+        className="animatedLogo"
+      />
     </div>
   );
 }
