@@ -1,5 +1,4 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import {
   faArrowLeft,
   faArrowDown,
@@ -12,6 +11,8 @@ import {
   faArrowUpRightFromSquare,
   faPlus,
   faFaceSmile,
+  faPen,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import EmojiPicker from "emoji-picker-react";
 import { useState, useEffect, useRef } from "react";
@@ -19,8 +20,7 @@ import { usePrompt, useServer } from "../hooks/hooks";
 import LoadingAnimation from "./LoadingAnimation";
 import { Link } from "react-router-dom";
 import { socketIoConnection } from "../socket/socket";
-import Linkify from "linkify-react";
-import ReactMarkdown from "react-markdown";
+import MessageCard from "./MessageCard";
 
 export default function Chats({ communityId, roomId }) {
   const [roomInfo, setRoomInfo] = useState(null);
@@ -88,7 +88,6 @@ export default function Chats({ communityId, roomId }) {
         setMessages(msg);
       });
       socketRef.current.on("sendMessage", (msg) => {
-        console.log("mmm");
         setMessages((prevMessages) => [...prevMessages, msg]);
         setUnSentMessages(
           unSentMessages.filter((message) => message.message !== msg.message)
@@ -163,14 +162,6 @@ export default function Chats({ communityId, roomId }) {
     !messageInfo.message ? (e.target.style.height = "50px") : null;
   };
 
-  const getTime = (timestamp) => {
-    let dateObj = new Date(timestamp);
-
-    return `${
-      dateObj.getHours() < 13 ? dateObj.getHours() : dateObj.getHours() - 12
-    }:${dateObj.getMinutes()} ${dateObj.getHours() < 12 ? "AM" : "PM"}`;
-  };
-
   const renderDate = (timestamp) => {
     let chatDateObj = new Date(timestamp);
     let currentDateObj = new Date();
@@ -187,6 +178,11 @@ export default function Chats({ communityId, roomId }) {
       return "Yesterday";
     }
     return chatDate;
+  };
+
+  const handleContextMenu = (e = new MouseEvent("contextmenu")) => {
+    e.preventDefault();
+    console.log(e.target.closest(`button`));
   };
 
   return roomInfo && communityInfo ? (
@@ -249,7 +245,7 @@ export default function Chats({ communityId, roomId }) {
           }}
         >
           {communityInfo.isInCommunity ? (
-            messages ? (
+            messages && myProfile ? (
               messages.length > 0 ? (
                 <>
                   <h6 className="text-center my-3">{roomInfo.name}</h6>
@@ -270,86 +266,11 @@ export default function Chats({ communityId, roomId }) {
                             </div>
                           ) : null}
 
-                          {message.type === "normal" ? (
-                            <>
-                              <div
-                                className="container w-100 mb-2 mt-2"
-                                key={message.id}
-                              >
-                                <div
-                                  className={`p-2 rounded-top-3 d-flex ${
-                                    message.creator === roomInfo.username
-                                      ? "ms-auto"
-                                      : ""
-                                  }`}
-                                  style={{
-                                    width: "fit-content",
-                                    maxWidth: "70%",
-                                  }}
-                                >
-                                  {message.creator != roomInfo.username ? (
-                                    <div className="mb-1">
-                                      <button className="btn btn-primary rounded-circle me-2">
-                                        <FontAwesomeIcon icon={faUser} />
-                                      </button>
-                                    </div>
-                                  ) : (
-                                    ""
-                                  )}
-
-                                  <div
-                                    className={`p-2 rounded-bottom-3 message-container ${
-                                      message.creator === roomInfo.username
-                                        ? "text-bg-primary ms-auto rounded-start-3"
-                                        : "text-bg-secondary rounded-end-3"
-                                    }`}
-                                  >
-                                    <span style={{ fontSize: "10pt" }}>
-                                      {message.creator}
-                                    </span>
-
-                                    <Linkify
-                                      as="p"
-                                      options={{
-                                        render: {
-                                          url: ({ attributes, content }) => {
-                                            return (
-                                              <a
-                                                {...attributes}
-                                                target="_blank"
-                                              >
-                                                {content}
-                                              </a>
-                                            );
-                                          },
-                                        },
-                                      }}
-                                    >
-                                      {message.message}
-                                    </Linkify>
-
-                                    <span
-                                      className="d-block lead w-100 text-end"
-                                      style={{ fontSize: "8pt" }}
-                                    >
-                                      {getTime(message.createdat)}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </>
-                          ) : message.type === "notice" ? (
-                            <>
-                              <div className="container d-flex justify-content-center py-0">
-                                <div
-                                  className="text-bg-secondary rounded-3 text-center py-0"
-                                  style={{ width: "400px" }}
-                                >
-                                  <small>{message.message}</small>
-                                </div>
-                              </div>
-                            </>
-                          ) : null}
+                          <MessageCard
+                            message={message}
+                            myProfile={myProfile}
+                            roomId={roomId}
+                          />
                         </div>
                       );
                     })}
@@ -455,10 +376,7 @@ export default function Chats({ communityId, roomId }) {
                   >
                     <FontAwesomeIcon icon={faFaceSmile} />
                   </button>
-                  <ul
-                    class="dropdown-menu"
-                    aria-labelledby="dropupMenuButton"
-                  >
+                  <ul class="dropdown-menu" aria-labelledby="dropupMenuButton">
                     <EmojiPicker
                       onEmojiClick={(e) => {
                         setMessageInfo({
