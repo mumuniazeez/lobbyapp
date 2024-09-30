@@ -457,24 +457,21 @@ export default function Chats({ communityId, roomId }) {
                   </button>
                   <ul
                     class="dropdown-menu"
-                    style={{ zIndex: 99999999999999 }}
                     aria-labelledby="dropupMenuButton"
                   >
-                    <li>
-                      <EmojiPicker
-                        onEmojiClick={(e) => {
-                          setMessageInfo({
-                            ...messageInfo,
-                            message: messageInfo.message + e.emoji,
-                          });
-                        }}
-                        theme={
-                          localStorage.theme === "system"
-                            ? "auto"
-                            : localStorage.theme
-                        }
-                      />
-                    </li>
+                    <EmojiPicker
+                      onEmojiClick={(e) => {
+                        setMessageInfo({
+                          ...messageInfo,
+                          message: messageInfo.message + e.emoji,
+                        });
+                      }}
+                      theme={
+                        localStorage.theme === "system"
+                          ? "auto"
+                          : localStorage.theme
+                      }
+                    />
                   </ul>
                 </div>
                 <textarea
