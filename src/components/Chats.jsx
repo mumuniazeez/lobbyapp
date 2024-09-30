@@ -83,6 +83,11 @@ export default function Chats({ communityId, roomId }) {
       socketRef.current = socketIoConnection;
 
       socketRef.current.emit("joinRoom", messageInfo);
+      socketRef.current.on("connect", () => {
+        if (roomInfo) {
+          socketRef.current.emit("joinRoom", messageInfo);
+        }
+      });
 
       socketRef.current.on("prevMessages", (msg) => {
         setMessages(msg);
