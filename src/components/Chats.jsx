@@ -446,7 +446,7 @@ export default function Chats({ communityId, roomId }) {
               <>
                 <div class="dropup">
                   <button
-                    class="btn btn-dark rounded-end-0 py-0 border-end"
+                    class="btn btn-light rounded-end-0 py-0 border-end"
                     type="button"
                     id="dropupMenuButton"
                     data-bs-toggle="dropdown"
