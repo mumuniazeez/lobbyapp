@@ -161,7 +161,7 @@ export default function MessageCard({ message, myProfile, roomId }) {
             className={`p-2 rounded-bottom-3 message-container ${
               message.creator === myProfile.username
                 ? "text-bg-primary bg-primary-subtle ms-auto rounded-start-3"
-                : "text-bg-secondary bg-primary-subtle rounded-end-3"
+                : "text-bg-secondary bg-secondary-subtle rounded-end-3"
             }`}
           >
             <p>
