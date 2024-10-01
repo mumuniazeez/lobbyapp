@@ -26,6 +26,7 @@ export default function Chats({ communityId, roomId }) {
   const [roomInfo, setRoomInfo] = useState(null);
   const [communityInfo, setCommunityInfo] = useState(null);
   const [messages, setMessages] = useState(null);
+  const [scrollToBottom, setScrollToBottom] = useState(true);
   const [messageInfo, setMessageInfo] = useState({
     communityId,
     roomId,
@@ -66,10 +67,11 @@ export default function Chats({ communityId, roomId }) {
   }, [communityId]);
 
   useEffect(() => {
-    if (messages && chatSpaceRef.current) {
+    if (messages && chatSpaceRef.current && scrollToBottom) {
       chatSpaceRef.current.scrollTo(0, chatSpaceRef.current.scrollHeight);
+      setScrollToBottom(false);
     }
-  }, [messages, unSentMessages, chatSpaceRef.current]);
+  }, [messages, unSentMessages, chatSpaceRef.current, scrollToBottom]);
 
   window.onbeforeunload = () => {
     if (socketRef.current && messageInfo.username) {
@@ -90,9 +92,11 @@ export default function Chats({ communityId, roomId }) {
       });
 
       socketRef.current.on("prevMessages", (msg) => {
+        if (messages) setScrollToBottom(false);
         setMessages(msg);
       });
       socketRef.current.on("sendMessage", (msg) => {
+        setScrollToBottom(true);
         setMessages((prevMessages) => [...prevMessages, msg]);
         setUnSentMessages(
           unSentMessages.filter((message) => message.message !== msg.message)
@@ -128,6 +132,7 @@ export default function Chats({ communityId, roomId }) {
       setUnSentMessages([...unSentMessages, newMessage]);
       socketRef.current.emit("sendMessage", messageInfo);
       setMessageInfo({ ...messageInfo, message: "" });
+      setScrollToBottom(true);
     }
   };
 
@@ -261,32 +266,29 @@ export default function Chats({ communityId, roomId }) {
               messages.length > 0 ? (
                 <>
                   <h6 className="text-center my-3">{roomInfo.name}</h6>
-                  <div>
-                    {messages.map((message, index) => {
-                      return (
-                        <div key={message.id}>
-                          {index === 0 ||
-                          renderDate(message.createdat) !==
-                            renderDate(messages[index - 1].createdat) ? (
-                            <div className="container d-flex justify-content-center position-sticky top-0">
-                              <div
-                                className="text-bg-secondary rounded-3 text-center p-1"
-                                style={{ fontSize: "10pt" }}
-                              >
-                                <span>{renderDate(message.createdat)}</span>
-                              </div>
+                  {messages.map((message, index) => {
+                    return (
+                      <div key={message.id}>
+                        {index === 0 ||
+                        renderDate(message.createdat) !==
+                          renderDate(messages[index - 1].createdat) ? (
+                          <div className="container d-flex justify-content-center position-sticky top-0">
+                            <div
+                              className="text-bg-secondary rounded-3 text-center p-1"
+                              style={{ fontSize: "10pt" }}
+                            >
+                              <span>{renderDate(message.createdat)}</span>
                             </div>
-                          ) : null}
-
-                          <MessageCard
-                            message={message}
-                            myProfile={myProfile}
-                            roomId={roomId}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
+                          </div>
+                        ) : null}
+                        <MessageCard
+                          message={message}
+                          myProfile={myProfile}
+                          roomId={roomId}
+                        />
+                      </div>
+                    );
+                  })}
 
                   {/* <div className="position-fixed bottom-0 left-5">
                     {chatSpaceRef.current &&
@@ -361,8 +363,10 @@ export default function Chats({ communityId, roomId }) {
             </div>
           )}
           {unSentMessages.length > 0 && <UnsentMessages />}
+
+          
         </div>
-        {communityInfo.isInCommunity && messages ? (
+        {communityInfo.isInCommunity && messages && chatSpaceRef.current ? (
           <div
             className="container py-0 chat-input-field-container d-flex align-items-center justify-content-center"
             style={
@@ -380,9 +384,9 @@ export default function Chats({ communityId, roomId }) {
           >
             {roomInfo.enablemessage || communityInfo.isAdmin ? (
               <>
-                <div class="dropup">
+                <div className="dropup">
                   <button
-                    class="btn btn-light rounded-end-0 py-0 border-end"
+                    className="btn btn-light rounded-end-0 py-0 border-end"
                     type="button"
                     id="dropupMenuButton"
                     data-bs-toggle="dropdown"
@@ -391,7 +395,10 @@ export default function Chats({ communityId, roomId }) {
                   >
                     <FontAwesomeIcon icon={faFaceSmile} />
                   </button>
-                  <ul class="dropdown-menu" aria-labelledby="dropupMenuButton">
+                  <ul
+                    className="dropdown-menu"
+                    aria-labelledby="dropupMenuButton"
+                  >
                     <EmojiPicker
                       onEmojiClick={(e) => {
                         setMessageInfo({

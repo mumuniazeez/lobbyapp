@@ -7,8 +7,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Linkify from "linkify-react";
 import { socketIoConnection } from "../socket/socket";
+import { useState } from "react";
 
 export default function MessageCard({ message, myProfile, roomId }) {
+  const [deleting, setDeleting] = useState(false);
   const getTime = (timestamp) => {
     let dateObj = new Date(timestamp);
 
@@ -73,12 +75,13 @@ export default function MessageCard({ message, myProfile, roomId }) {
               className="d-block lead w-100 text-end"
               style={{ fontSize: "8pt" }}
             >
-              {getTime(message.createdat)}
+              {deleting ? "Deleting" : getTime(message.createdat)}
             </span>
           </div>
         </div>
-        <ul className="dropdown-menu text-small">
-          {/* {message.creator === myProfile.username ? (
+        {!deleting && (
+          <ul className="dropdown-menu text-small">
+            {/* {message.creator === myProfile.username ? (
             <li>
               <button className="dropdown-item">
                 <span className="">
@@ -88,35 +91,37 @@ export default function MessageCard({ message, myProfile, roomId }) {
               </button>
             </li>
           ) : null} */}
-          {message.creator === myProfile.username ? (
-            <li>
-              <button
-                className="dropdown-item"
-                onClick={() => {
-                  socketIoConnection.emit("deleteMessage", {
-                    id: message.id,
-                    roomId,
-                  });
-                }}
-              >
-                <span className="">
-                  <FontAwesomeIcon icon={faTrash} className="me-2" />
-                  Delete
-                </span>
-              </button>
-            </li>
-          ) : null}
-          {message.creator != myProfile.username ? (
-            <li>
-              <button className="dropdown-item">
-                <span className="">
-                  <FontAwesomeIcon icon={faThumbsDown} className="me-2" />
-                  Report
-                </span>
-              </button>
-            </li>
-          ) : null}
-        </ul>
+            {message.creator === myProfile.username ? (
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={() => {
+                    setDeleting(true);
+                    socketIoConnection.emit("deleteMessage", {
+                      id: message.id,
+                      roomId,
+                    });
+                  }}
+                >
+                  <span className="">
+                    <FontAwesomeIcon icon={faTrash} className="me-2" />
+                    Delete
+                  </span>
+                </button>
+              </li>
+            ) : null}
+            {message.creator != myProfile.username ? (
+              <li>
+                <button className="dropdown-item">
+                  <span className="">
+                    <FontAwesomeIcon icon={faThumbsDown} className="me-2" />
+                    Report
+                  </span>
+                </button>
+              </li>
+            ) : null}
+          </ul>
+        )}
       </div>
     </>
   ) : message.type === "notice" ? (
