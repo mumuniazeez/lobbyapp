@@ -9,14 +9,14 @@ let disconnected = false;
 socketIoConnection.on("disconnect", () => {
   if (disconnected) return;
   interval = setInterval(() => {
-    useAlert("Disconnected, Reconnecting..");
+    useAlert("Disconnected, Reconnecting..", "danger");
   }, 5090);
   disconnected = true;
 });
 
 socketIoConnection.on("connect", () => {
   if (!disconnected) return;
-  useAlert("Connected");
+  useAlert("Connected", "success");
   interval ? clearInterval(interval) : null;
   disconnected = false;
 });

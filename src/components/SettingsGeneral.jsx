@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 export default function SettingsGeneral() {
+  document.title = "General | Settings";
+
   const [isMobile, setIsMobile] = useState(false);
 
   window.addEventListener("resize", () =>

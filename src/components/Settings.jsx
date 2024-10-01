@@ -70,21 +70,6 @@ export default function Settings() {
                     </Link>
                     <h6 className="m-0">Settings</h6>
                   </div>
-                  <div>
-                    <FontAwesomeIcon
-                      data-bs-toggle="dropdown"
-                      icon={faEllipsisVertical}
-                      style={{ cursor: "pointer" }}
-                      className="me-3"
-                    />
-                    <ul className="dropdown-menu text-small w-25 pt-3">
-                      <li>
-                        <button className="dropdown-item">
-                          <i className="fa fa-share me-2"></i>Share
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
                 </div>
               </div>
             ) : null}
@@ -182,13 +167,13 @@ export default function Settings() {
             </div>
           </>
         ) : (
-          <LoadingAnimation />
+          <>
+            <LoadingAnimation />
+            <h6 className="text-center">Loading settings</h6>
+          </>
         )}
       </div>
-      <div
-        className={`col-md-8 p-0 ${isMobile && !tab ? "d-none" : ""}`}
-        style={{ width: !isMobile ? "68.66666667%" : "100%", height: "100vh" }}
-      >
+      <div className={`col-md-9 p-0 ${isMobile && !tab ? "d-none" : ""}`}>
         {tab === "general" ? (
           <SettingsGeneral />
         ) : tab === "profile" ? (

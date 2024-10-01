@@ -12,6 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 import LoadingAnimation from "./LoadingAnimation";
 
 export default function SettingsProfile() {
+  document.title = "Profile | Settings";
   const [myProfile, setMyProfile] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -36,7 +37,6 @@ export default function SettingsProfile() {
         localStorage.removeItem("token");
         localStorage.removeItem("theme");
         document.body.dataset.bsTheme = "system";
-
         nav("/login");
       }
     );
@@ -45,15 +45,19 @@ export default function SettingsProfile() {
     <>
       {myProfile ? (
         <div
-          className={`container bg-light p-0 ${
-            isMobile ? "chat--container" : ""
+          className={` bg-light p-0 ${
+            isMobile ? "container-fluid" : "container"
           }`}
           style={{
-            width: "100%",
+            width: "100",
             height: "100vh",
           }}
         >
-          <div className="container w-100  border-bottom">
+          <div
+            className={`border-bottom ${
+              isMobile ? "container-fluid" : "container"
+            }`}
+          >
             <div className="d-flex align-items-center justify-content-between">
               <div className="d-flex align-items-center py-3">
                 <Link to={-1} className="text-decoration-none text-black me-3">
@@ -62,12 +66,12 @@ export default function SettingsProfile() {
                 <h6 className="m-0">Profile</h6>
               </div>
               <div>
-                <button className="btn me-3" data-bs-toggle="dropdown">
+                <button className="btn" data-bs-toggle="dropdown">
                   <FontAwesomeIcon icon={faEllipsisVertical} />
                 </button>
 
                 <ul className="dropdown-menu text-small w-25 pt-3">
-                  <li>
+                  {/* <li>
                     <button className="dropdown-item" onClick={signOut}>
                       <FontAwesomeIcon
                         icon={faPen}
@@ -75,7 +79,7 @@ export default function SettingsProfile() {
                       />
                       Edit profile
                     </button>
-                  </li>
+                  </li> */}
                   <li>
                     <button
                       className="dropdown-item bg-danger"
@@ -96,8 +100,16 @@ export default function SettingsProfile() {
             className="mb-3 overflow-hidden overflow-y-scroll bg-light"
             style={{ scrollBehavior: "smooth", height: "100%" }}
           >
-            <div className="container px-5 border-bottom py-2 mt-4">
-              <div className="container text-center">
+            <div
+              className={`px-5 border-bottom py-2 mt-4 ${
+                isMobile ? "container-fluid" : "container"
+              }`}
+            >
+              <div
+                className={`text-center ${
+                  isMobile ? "container-fluid" : "container"
+                }`}
+              >
                 <div
                   className="d-inline-flex align-items-center justify-content-center text-bg-secondary bg-gradient fs-1 rounded-circle me-3 mb-3"
                   style={{ width: "7rem", height: "7rem" }}
@@ -113,7 +125,11 @@ export default function SettingsProfile() {
                 <p className="mt-0">{myProfile.username}</p>
               </div>
             </div>
-            <div className="container px-5 border-bottom py-2">
+            <div
+              className={`px-5 border-bottom py-2 ${
+                isMobile ? "container-fluid" : "container"
+              }`}
+            >
               <small>Bio</small>
               <p>
                 {myProfile.bio
@@ -135,12 +151,16 @@ export default function SettingsProfile() {
                   : "You haven't add your date of birth yet."}
               </p>
             </div>
-            <div className="px-5 py-3 mb-5 container bg-light">
-              <button className="btn btn-primary me-3 my-1" onClick={signOut}>
+            <div
+              className={`px-5 py-3 mb-5 container bg-light ${
+                isMobile ? "container-fluid" : "container"
+              }`}
+            >
+              {/* <button className="btn btn-primary me-3 my-1" onClick={signOut}>
                 <FontAwesomeIcon icon={faPen} className="me-2" />
                 Edit profile
-              </button>
-              <button className="btn btn-danger me-3 my-1" onClick={signOut}>
+              </button> */}
+              <button className={`btn btn-danger me-3 my-1 ${isMobile? "w-100 rounded-pill" : ""}`} onClick={signOut}>
                 <FontAwesomeIcon icon={faSignOut} className="me-2" />
                 Sign out
               </button>

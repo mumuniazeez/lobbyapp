@@ -32,7 +32,7 @@ export default function App() {
       ></div>
       <main className="bg-body-secondary">
         <div
-          className="container-fluid p-0"
+          className="container-fluid p-0 d-flex"
           style={{ height: "100vh", width: "100wh" }}
         >
           <BrowserRouter>
@@ -41,7 +41,6 @@ export default function App() {
                 <Route index element={<Home />} />
                 <Route path="/discover" element={<Discover />} />
                 <Route path="/user" element={<UserProfile />} />
-                {/* <Route path="/community/profile" element={<CommunityProfile />} /> */}
                 <Route path="/settings" element={<Settings />} />
               </Route>
               <Route path="/login" element={<Login />} />

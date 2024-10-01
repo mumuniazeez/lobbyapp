@@ -102,6 +102,10 @@ export default function Chats({ communityId, roomId }) {
 
     return () => {
       if (socketRef.current && messageInfo.username) {
+        socketIoConnection.off("connect");
+        socketIoConnection.off("sendMessage");
+        socketIoConnection.off("prevMessage");
+        socketIoConnection.off("sendMessage");
         socketRef.current.emit("leaveRoom", messageInfo);
       }
     };
@@ -110,6 +114,9 @@ export default function Chats({ communityId, roomId }) {
   useEffect(() => {
     return () => {
       if (socketRef.current && messageInfo.username) {
+        socketIoConnection.off("connect");
+        socketIoConnection.off("sendMessage");
+        socketIoConnection.off("prevMessage");
         socketRef.current.emit("leaveRoom", messageInfo);
       }
     };
@@ -250,7 +257,7 @@ export default function Chats({ communityId, roomId }) {
           }}
         >
           {communityInfo.isInCommunity ? (
-            messages && myProfile ? (
+            messages && myProfile && chatSpaceRef.current ? (
               messages.length > 0 ? (
                 <>
                   <h6 className="text-center my-3">{roomInfo.name}</h6>
@@ -329,7 +336,10 @@ export default function Chats({ communityId, roomId }) {
                 </div>
               )
             ) : (
-              <LoadingAnimation />
+              <>
+                <LoadingAnimation />
+                <h6 className="text-center">Loading chat</h6>
+              </>
             )
           ) : (
             <div className="container w-100 h-100 d-flex align-items-center justify-content-center text-center flex-column">

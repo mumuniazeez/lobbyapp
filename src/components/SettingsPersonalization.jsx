@@ -15,6 +15,7 @@ import CommunityProfile from "./CommunityProfile";
 import { socketIoConnection } from "../socket/socket";
 
 export default function SettingsPersonalization() {
+    document.title = "Personalize | Settings";
   const [myProfile, setMyProfile] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const [theme, setTheme] = useState(localStorage.theme);

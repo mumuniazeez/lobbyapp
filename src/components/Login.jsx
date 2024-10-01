@@ -14,6 +14,15 @@ export default function Login() {
       valid: "",
     },
   });
+  const [isMobile, setIsMobile] = useState(false);
+
+  window.addEventListener("resize", () =>
+    setIsMobile(window.innerWidth <= 762)
+  );
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= 762);
+  }, []);
 
   const nav = useNavigate();
 
@@ -57,10 +66,14 @@ export default function Login() {
   return (
     <>
       <div
-        className="container-fluid d-flex align-items-center justify-content-center"
+        className="container-fluid d-flex align-items-center justify-content-center pb-5"
         style={{ height: "100%" }}
       >
-        <div className="container bg-light py-5 d-flex justify-content-center rounded-3 overflow-y-scroll h-100">
+        <div
+          className={`container bg-light py-5 d-flex justify-content-center rounded-3 overflow-y-scroll ${
+            isMobile ? "h-100" : ""
+          }`}
+        >
           <div className="container  rounded-3 row">
             <div className="col-md-12">
               <h1 className="fw-bold text-primary">Lobby</h1>
@@ -111,7 +124,7 @@ export default function Login() {
                       placeholder="Password"
                       class={`form-control ${userData.password.valid}`}
                       value={userData.password.data}
-                      new-password
+                      current-password
                       onChange={(e) => {
                         if (e.target.value) userData.password.valid = "";
                         else {

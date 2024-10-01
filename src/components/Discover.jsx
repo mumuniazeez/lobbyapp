@@ -159,7 +159,7 @@ export default function Discover() {
               </div>
             ) : communities.length > 0 ? (
               communities.map((community) => {
-                return !community.isInCommunity ? (
+                return (
                   <div key={communities.id}>
                     <div className="container  p-0 mt-3 mb-3">
                       <div className="d-flex align-items-center justify-content-between">
@@ -173,7 +173,9 @@ export default function Discover() {
                           >
                             <FontAwesomeIcon icon={faUsers} />
                           </div>
-                          <h6>{community.name}</h6>
+                          <h6 style={{ textOverflow: "ellipsis" }}>
+                            {community.name}
+                          </h6>
                         </Link>
                         <div>
                           {isMobile ? (
@@ -188,7 +190,7 @@ export default function Discover() {
                       </div>
                     </div>
                   </div>
-                ) : null;
+                );
               })
             ) : (
               <>
@@ -205,14 +207,16 @@ export default function Discover() {
               </>
             )
           ) : (
-            <LoadingAnimation />
+            <>
+              <LoadingAnimation />
+              <h6 className="text-center">Loading communities</h6>
+            </>
           )}
         </div>
       </div>
 
       <div
-        className={`col-md-8 p-0 ${isMobile && !communityId ? "d-none" : ""}`}
-        style={{ width: !isMobile ? "68.66666667%" : "100%", height: "100vh" }}
+        className={`col-md-9 p-0 ${isMobile && !communityId ? "d-none" : ""}`}
       >
         {communityId ? (
           communityInfo ? (

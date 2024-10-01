@@ -9,6 +9,8 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 export default function SettingsHelp() {
+    document.title = "Help | Settings";
+
   const [isMobile, setIsMobile] = useState(false);
 
   window.addEventListener("resize", () =>

@@ -10,18 +10,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useServer, usePrompt } from "../hooks/hooks";
 import lobbyLogo from "../lobbyLogo.png";
 
 export default function Sidenav() {
   document.title = "Lobby";
-  // /community/myCommunities
   const nav = useNavigate();
   const [asLoggedIn, setAsLoggedIn] = useState(false);
   const [expandMenu, setExpandMenu] = useState(false);
-
-  const sNav = useRef(null);
 
   let { pathname, search } = useLocation();
 
@@ -38,7 +35,8 @@ export default function Sidenav() {
     useServer(`/user/me`, "GET", (res) => {
       if (
         res.message === "Unauthorized" ||
-        res.message === "Error verifying token"
+        res.message === "Error verifying token" ||
+        res.message === "User not found"
       ) {
         setAsLoggedIn(false);
         sessionStorage.setItem("urlRef", `${pathname}${search}`);
@@ -62,33 +60,10 @@ export default function Sidenav() {
     });
   }, []);
 
-  // window.addEventListener("click", (e) => {
-  //   console.log(sNav.current === e.target);
-  //   if (!sNav.current && sNav.current === e.target) return;
-
-  //   setExpandMenu(false);
-  //   sNav.current.classList.remove("nav-expanded");
-  // });
-
-  const signOut = () => {
-    usePrompt(
-      "Sign out",
-      "Are you sure you want to sign out ?",
-      "danger",
-      "Sign out",
-      () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("theme");
-        document.body.dataset.bsTheme = "system";
-        nav("/login");
-      }
-    );
-  };
   return asLoggedIn ? (
     <>
-      <div className="row" style={{ height: "100vh" }}>
         <div
-          className="col-1"
+          className=""
           style={{
             width: "65px",
           }}
@@ -182,16 +157,24 @@ export default function Sidenav() {
             </div>
           </div>
         </div>
-
-        <Outlet />
-      </div>
+        <div style={{width: "100vw"}}>
+      
+        <div className="row" style={{ height: "100vh" }}>
+          <Outlet />
+        </div>
+        </div>
     </>
   ) : (
     <div
       className="container-fluid d-flex align-items-center justify-content-center flex-column"
       style={{ height: "100vh" }}
     >
-        <img src={lobbyLogo} alt="lobby logo" width={100} className="animatedLogo" />
+      <img
+        src={lobbyLogo}
+        alt="lobby logo"
+        width={100}
+        className="animatedLogo"
+      />
     </div>
   );
 }

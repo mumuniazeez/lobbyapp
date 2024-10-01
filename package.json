@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "type": "module",
   "description": "React TypeScript on Replit, using Vite bundler",
-  "proxy": "https://1670aff2-1e48-4ef0-a58d-9ab38e587fb8-00-gew7eycqq30s.spock.replit.dev:3000",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

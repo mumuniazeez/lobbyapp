@@ -27,7 +27,7 @@ export default function MobileNav() {
       if (
         res.message === "Unauthorized" ||
         res.message === "Error verifying token" ||
-        res.message === "Failed to fetch"
+        res.message === "User not found"
       ) {
         setAsLoggedIn(false);
         sessionStorage.setItem("urlRef", `${pathname}${search}`);
@@ -59,7 +59,7 @@ export default function MobileNav() {
   }, [search]);
   return asLoggedIn ? (
     <>
-      <div style={{ paddingBottom: "20px" }}>
+      <div style={{ paddingBottom: "20px", width:"100vw" }}>
         <Outlet />
       </div>
 

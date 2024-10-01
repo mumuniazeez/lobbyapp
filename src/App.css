@@ -117,7 +117,7 @@ html {
 }
 
 .nav-expanded {
-  transition: all 0.2s ease-out !important;
+  transition: width 0.2s ease-out !important;
 }
 
 .nav-expanded.active {
@@ -126,6 +126,7 @@ html {
   left: 0;
   width: 200px !important;
   height: 100vh;
+  
   justify-content: start;
   align-items: start;
   text-align: start;
@@ -143,7 +144,7 @@ html {
   50% {
     transform: scale(1.5);
   }
-  100%{
+  100% {
     transform: scale(1);
   }
 }

@@ -330,10 +330,16 @@ export default function Home() {
                 </>
               )
             ) : (
-              <LoadingAnimation />
+              <>
+                <LoadingAnimation />
+                <h6 className="text-center">Loading rooms</h6>
+              </>
             )
           ) : (
-            <LoadingAnimation />
+            <>
+              <LoadingAnimation />
+              <h6 className="text-center">Loading communities</h6>
+            </>
           )}
         </div>
 
@@ -356,12 +362,11 @@ export default function Home() {
         ) : null}
       </div>
       <div
-        className={`col-md-8 p-0 ${
+        className={`col-md-9 p-0 ${
           isMobile && !communityId && !roomId && !showCommunityProfile
             ? "d-none"
             : ""
         }`}
-        style={{ width: !isMobile ? "68.66666667%" : "100%", height: "100vh" }}
       >
         {roomId && communityId && !showCommunityProfile ? (
           <Chats communityId={communityId} roomId={roomId} />

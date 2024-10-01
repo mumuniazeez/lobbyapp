@@ -6,6 +6,8 @@ import {
   faThumbsDown,
 } from "@fortawesome/free-solid-svg-icons";
 import Linkify from "linkify-react";
+import { socketIoConnection } from "../socket/socket";
+
 export default function MessageCard({ message, myProfile, roomId }) {
   const getTime = (timestamp) => {
     let dateObj = new Date(timestamp);
@@ -24,6 +26,7 @@ export default function MessageCard({ message, myProfile, roomId }) {
           style={{
             width: "fit-content",
             maxWidth: "70%",
+            overflowWrap: "anywhere",
           }}
           data-bs-toggle="dropdown"
         >

@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useAlert, useServer } from "../hooks/hooks";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 export default function Signup() {
   document.title = "Sign up | Lobby";
   const nav = useNavigate();
@@ -33,6 +35,16 @@ export default function Signup() {
       valid: "",
     },
   });
+  const [isMobile, setIsMobile] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  window.addEventListener("resize", () =>
+    setIsMobile(window.innerWidth <= 762)
+  );
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= 762);
+  }, []);
 
   const [submitted, setSubmitted] = useState(false);
 
@@ -45,7 +57,7 @@ export default function Signup() {
       if (usernameRegex.test(username)) {
         // /user/profile/:username
         let data = await fetch(
-          `https://lobbyserver.onrender.com/user/profile/@${username}`
+          `${import.meta.env.VITE_SERVER_URL}/user/profile/@${username}`
         );
 
         console.log(data);
@@ -157,7 +169,11 @@ export default function Signup() {
         className="container-fluid d-flex align-items-center justify-content-center"
         style={{ height: "100%" }}
       >
-        <div className="container bg-light py-5 d-flex justify-content-center rounded-3 overflow-y-scroll h-100">
+        <div
+          className={`container bg-light py-5 d-flex justify-content-center rounded-3 overflow-y-scroll ${
+            isMobile ? "h-100" : ""
+          }`}
+        >
           <div className="container  rounded-3 row">
             <div className="col-md-12">
               <h1 className="fw-bold text-primary">Lobby</h1>
@@ -247,13 +263,6 @@ export default function Signup() {
                       value={userData.username.data}
                       onChange={(e) => {
                         validateUsername(e.target.value);
-                        setUserData({
-                          ...userData,
-                          username: {
-                            ...userData.username,
-                            data: e.target.value,
-                          },
-                        });
                       }}
                     />
                     <div className="valid-feedback">
@@ -300,12 +309,12 @@ export default function Signup() {
                 <div className="col-md-6 mb-3">
                   <div className="form-floating">
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       id="password"
                       placeholder="Password"
                       class={`form-control ${userData.password.valid}`}
                       value={userData.password.data}
-                      new-password
+                      new-password={userData.password.data}
                       onChange={(e) => {
                         validatePassword(e.target.value);
                         setUserData({
@@ -346,10 +355,10 @@ export default function Signup() {
                 <div className="col-md-6 mb-3">
                   <div className="form-floating">
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       id="cPassword"
                       placeholder="Confirm Password"
-                      new-password
+                      new-password={userData.password.data}
                       class={`form-control ${userData.cPassword.valid}`}
                       value={userData.cPassword.data}
                       onChange={(e) => {
@@ -374,6 +383,21 @@ export default function Signup() {
                     <div className="invalid-feedback">Incorrect password</div>
                   </div>
                 </div>
+                <div className="col-12 mb-3">
+                  <button
+                    className="btn"
+                    type="button"
+                    onClick={() => {
+                      setShowPassword(!showPassword);
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={showPassword ? faEyeSlash : faEye}
+                      className="me-2"
+                    />
+                    {showPassword ? "Hide" : "Show"} password
+                  </button>
+                </div>
                 <button
                   className="btn btn-primary col-md-6"
                   type="submit"
@@ -391,7 +415,7 @@ export default function Signup() {
                 </button>
               </form>
             </div>
-            <div className="col-12">
+            <div className="col-12 pt-3 pb-5">
               <p className="lead">
                 Already have an account? <Link to="/login">Login</Link>
               </p>
