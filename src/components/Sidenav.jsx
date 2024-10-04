@@ -26,7 +26,8 @@ export default function Sidenav() {
   let { pathname, search } = useLocation();
 
   useEffect(() => {
-    if (localStorage.theme === "system") {
+   if (!JSON.parse(localStorage.appData)) return;
+    if (JSON.parse(localStorage.appData).theme === "system") {
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
         ? (document.body.dataset.bsTheme = "dark")
