@@ -34,7 +34,9 @@ export default function App() {
   useEffect(() => {
     if (!myProfile) return;
     console.log(myProfile);
-    localStorage.language = myProfile.language;
+    let appData = JSON.parse(localStorage.appData);
+    appData.userData.language = myProfile.language;
+    localStorage.appData = JSON.stringify(appData);
     document.querySelector("html").lang = myProfile.language;
     // if (myProfile.language == "ar") document.querySelector("html").dir = "rtl";
   }, [myProfile]);

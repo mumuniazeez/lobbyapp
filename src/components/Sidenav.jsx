@@ -114,9 +114,10 @@ export default function Sidenav() {
       });
     }
   }, []);
-
-  let { sideNavMobileNavMenu } =
-    languages[JSON.parse(localStorage.appData).userData.language];
+  let sideNavMobileNavMenu;
+  sideNavMobileNavMenu =
+    asLoggedIn &&
+    languages[JSON.parse(localStorage.appData).userData.language || "en"];
 
   return asLoggedIn ? (
     <>
@@ -240,7 +241,7 @@ export default function Sidenav() {
       />
       {loadingText && (
         <div className="mt-5 pt-5">
-          <div class="progress mb-3 w-100 border">
+          <div className="progress mb-3 w-100 border">
             <div
               className={"progress-bar w-" + progress}
               role="progressbar"

@@ -125,8 +125,10 @@ export default function MobileNav() {
     setRoomId(urlSearchParam.get("rId"));
     setTab(urlSearchParam.get("tab"));
   }, [search]);
-  let { sideNavMobileNavMenu } =
-    languages[JSON.parse(localStorage.appData).userData.language];
+  let sideNavMobileNavMenu;
+  sideNavMobileNavMenu =
+    asLoggedIn &&
+    languages[JSON.parse(localStorage.appData).userData.language || "en"];
   return asLoggedIn ? (
     <>
       <div style={{ paddingBottom: "20px", width: "100vw" }}>
@@ -208,7 +210,7 @@ export default function MobileNav() {
 
       {loadingText && (
         <div className="mt-5 pt-5">
-          <div class="progress mb-3 w-100 border">
+          <div className="progress mb-3 w-100 border">
             <div
               className={"progress-bar w-" + progress}
               role="progressbar"
