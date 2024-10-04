@@ -26,16 +26,15 @@ export default function MobileNav() {
   const nav = useNavigate();
   const [asLoggedIn, setAsLoggedIn] = useState(false);
 
+ 
   useEffect(() => {
-    if (JSON.parse(localStorage.appData).userData.theme === "system") {
+   if (!JSON.parse(localStorage.appData)) return;
+    if (JSON.parse(localStorage.appData).theme === "system") {
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
         ? (document.body.dataset.bsTheme = "dark")
         : (document.body.dataset.bsTheme = "light");
-    } else
-      document.body.dataset.bsTheme = JSON.parse(
-        localStorage.appData
-      ).userData.theme;
+    } else document.body.dataset.bsTheme = localStorage.theme;
   }, []);
 
   useEffect(() => {
