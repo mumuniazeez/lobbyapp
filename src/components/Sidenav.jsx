@@ -23,7 +23,6 @@ export default function Sidenav() {
   const [loadingText, setLoadingText] = useState("");
   const [progress, setProgress] = useState(0);
   const [sideNavMobileNavMenu, setSideNavMobileNavMenu] = useState(null);
-  if (localStorage.appData) setSideNavMobileNavMenu(languages[JSON.parse(localStorage.appData).userData.language || "en"])
 
   let { pathname, search } = useLocation();
 
@@ -36,6 +35,8 @@ export default function Sidenav() {
         : (document.body.dataset.bsTheme = "light");
     } else document.body.dataset.bsTheme = localStorage.theme;
   }, []);
+
+  
 
   useEffect(() => {
     if (!localStorage.appData) {
@@ -117,6 +118,9 @@ export default function Sidenav() {
       });
     }
   }, []);
+
+  if (localStorage.appData) setSideNavMobileNavMenu(languages[JSON.parse(localStorage.appData).userData.language || "en"])
+  
 
 
   return asLoggedIn ? (
