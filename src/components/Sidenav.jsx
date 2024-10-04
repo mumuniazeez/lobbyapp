@@ -117,8 +117,8 @@ export default function Sidenav() {
   }, []);
   let sideNavMobileNavMenu;
   sideNavMobileNavMenu =
-    asLoggedIn &&
-    languages[JSON.parse(localStorage.appData).userData.language || "en"];
+    asLoggedIn ?
+    languages[JSON.parse(localStorage.appData).userData.language || "en"] : null
 
   return asLoggedIn ? (
     <>
