@@ -21,7 +21,8 @@ import LoadingAnimation from "./LoadingAnimation";
 import CreateCommunityModal from "./CreateCommunityModal";
 import languages from "../languages";
 export default function Discover() {
-  let { home, discover } = languages[localStorage.language || "en"];
+  let { home, discover } =
+    languages[JSON.parse(localStorage.appData).userData.language];
   document.title = discover.pageTitle;
 
   let { search } = useLocation();

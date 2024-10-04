@@ -7,13 +7,15 @@ import { usePrompt, useServer } from "../hooks/hooks";
 import LoadingAnimation from "./LoadingAnimation";
 
 export default function SettingsGeneral() {
-  let { settingsGeneral } = languages[localStorage.language || "en"];
+  let { settingsGeneral } = languages[localStorage.language];
   document.title = settingsGeneral.pageTitle;
   const [myProfile, setMyProfile] = useState(
     JSON.parse(localStorage.appData).userData
   );
   const [isMobile, setIsMobile] = useState(false);
-  const [language, setLanguage] = useState(localStorage.language || "en");
+  const [language, setLanguage] = useState(
+    JSON.parse(localStorage.appData).userData.language
+  );
   const [changeLang, setChangeLang] = useState(false);
 
   window.addEventListener("resize", () =>
@@ -32,7 +34,9 @@ export default function SettingsGeneral() {
 
   useEffect(() => {
     if (!myProfile) return;
-    localStorage.language = myProfile.language;
+    let appData = JSON.parse(localStorage.appData);
+    appData.userData.language = myProfile.language;
+    localStorage.appData = JSON.stringify(appData);
     setLanguage(myProfile.language);
   }, [myProfile]);
 
@@ -51,7 +55,6 @@ export default function SettingsGeneral() {
             let appData = JSON.parse(localStorage.appData);
             appData.userData.language = newLanguage;
             localStorage.appData = JSON.stringify(appData);
-            localStorage.language = newLanguage;
             location.reload();
           },
           {

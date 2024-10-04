@@ -17,7 +17,8 @@ import {
 import languages from "../languages";
 
 export default function NoPage() {
-  let { notFound } = languages[localStorage.language || "en"];
+  let { notFound } =
+    languages[JSON.parse(localStorage.appData).userData.language];
   document.title = notFound.pageTitle;
   return (
     <>

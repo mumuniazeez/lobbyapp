@@ -10,7 +10,8 @@ import { Link } from "react-router-dom";
 import languages from "../languages";
 
 export default function SettingsHelp() {
-  let { settingsHelp } = languages[localStorage.language || "en"];
+  let { settingsHelp } =
+    languages[JSON.parse(localStorage.appData).userData.language];
   document.title = settingsHelp.pageTitle;
 
   const [isMobile, setIsMobile] = useState(false);

@@ -30,7 +30,8 @@ export default function CreateRoomModal({ communityId }) {
       roomInfo
     );
   };
-  let { createRoomModal } = languages[localStorage.language || "en"];
+  let { createRoomModal } =
+    languages[JSON.parse(localStorage.appData).userData.language];
   return (
     <>
       <div

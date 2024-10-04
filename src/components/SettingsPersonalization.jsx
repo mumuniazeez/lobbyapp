@@ -7,7 +7,8 @@ import LoadingAnimation from "./LoadingAnimation";
 import languages from "../languages";
 
 export default function SettingsPersonalization() {
-  let { settingsPersonalization } = languages[localStorage.language || "en"];
+  let { settingsPersonalization } =
+    languages[JSON.parse(localStorage.appData).userData.language];
   document.title = settingsPersonalization.pageTitle;
   const [myProfile, setMyProfile] = useState(
     JSON.parse(localStorage.appData).userData

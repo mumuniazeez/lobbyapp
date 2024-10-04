@@ -22,7 +22,8 @@ import SettingsHelp from "./SettingsHelp";
 import SettingsInvite from "./SettingsInvite";
 import languages from "../languages";
 export default function Settings() {
-  let { settings } = languages[localStorage.language || "en"];
+  let { settings } =
+    languages[JSON.parse(localStorage.appData).userData.language];
   document.title = settings.pageTitle;
   let { search } = useLocation();
   let urlSearchParam = new URLSearchParams(search);

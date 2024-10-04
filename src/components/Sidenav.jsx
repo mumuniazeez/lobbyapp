@@ -38,7 +38,7 @@ export default function Sidenav() {
     if (!localStorage.appData) {
       let appData = {};
       setLoadingText("Loading user data");
-      setProgress(25);
+      setProgress(0);
       useServer(`/user/me`, "GET", (res) => {
         if (
           res.message === "Unauthorized" ||
@@ -50,12 +50,12 @@ export default function Sidenav() {
           nav("/login");
         } else {
           appData.userData = res;
-          setProgress(50);
+          setProgress(25);
           setLoadingText("Loading communities");
 
           useServer("/community/joined", "get", (res) => {
             appData.joinedCommunities = res;
-            setProgress(75);
+            setProgress(50);
             setLoadingText("Loading rooms");
             appData.rooms = [];
             let communities = res;
@@ -65,6 +65,7 @@ export default function Sidenav() {
                 console.log("🚀 ~ useServer ~ rooms:", appData.rooms);
                 console.log(appData.rooms);
                 if (index === communities.length - 1) {
+                  setProgress(75);
                   useServer("/community/all/", "get", (res) => {
                     setLoadingText("Loading discover");
                     setProgress(100);
@@ -114,7 +115,8 @@ export default function Sidenav() {
     }
   }, []);
 
-  let { sideNavMobileNavMenu } = languages[localStorage.language || "en"];
+  let { sideNavMobileNavMenu } =
+    languages[JSON.parse(localStorage.appData).userData.language];
 
   return asLoggedIn ? (
     <>

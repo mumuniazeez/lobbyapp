@@ -190,7 +190,7 @@ export default function Chats({ communityId, roomId }) {
     }
   };
 
-  let { chats } = languages[localStorage.language || "en"];
+  let { chats } = languages[JSON.parse(localStorage.appData).userData.language];
 
   const UnsentMessages = () => {
     return (

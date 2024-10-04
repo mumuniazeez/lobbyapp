@@ -35,7 +35,7 @@ export default function App() {
     if (!myProfile) return;
     console.log(myProfile);
     localStorage.language = myProfile.language;
-    document.querySelector("html").lang = myProfile.language || "en";
+    document.querySelector("html").lang = myProfile.language;
     // if (myProfile.language == "ar") document.querySelector("html").dir = "rtl";
   }, [myProfile]);
 

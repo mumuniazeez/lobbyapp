@@ -10,7 +10,8 @@ import { Link } from "react-router-dom";
 import languages from "../languages";
 
 export default function SettingsInvite() {
-  let { settingsInvite } = languages[localStorage.language || "en"];
+  let { settingsInvite } =
+    languages[JSON.parse(localStorage.appData).userData.language];
   document.title = settingsInvite.title;
 
   const [isMobile, setIsMobile] = useState(false);

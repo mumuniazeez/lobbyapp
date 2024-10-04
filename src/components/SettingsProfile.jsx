@@ -12,7 +12,8 @@ import { Link, useNavigate } from "react-router-dom";
 import LoadingAnimation from "./LoadingAnimation";
 import languages from "../languages";
 export default function SettingsProfile() {
-  let { settingsProfile } = languages[localStorage.language || "en"];
+  let { settingsProfile } =
+    languages[JSON.parse(localStorage.appData).userData.language];
   document.title = settingsProfile.pageTitle;
   const [myProfile, setMyProfile] = useState(
     JSON.parse(localStorage.appData).userData

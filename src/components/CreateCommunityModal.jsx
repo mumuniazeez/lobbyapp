@@ -31,7 +31,8 @@ export default function CreateCommunityModal() {
     );
   };
 
-  let { createCommunityModal } = languages[localStorage.language || "en"];
+  let { createCommunityModal } =
+    languages[JSON.parse(localStorage.appData).userData.language];
   return (
     <>
       <div

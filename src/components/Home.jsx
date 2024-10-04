@@ -24,7 +24,8 @@ import lobbyLogo from "../lobbyLogo.png";
 import languages from "../languages";
 
 export default function Home() {
-  let { home, discover } = languages[localStorage.language || "en"];
+  let { home, discover } =
+    languages[JSON.parse(localStorage.appData).userData.language];
   document.title = home.pageTitle;
   let { search } = useLocation();
 
