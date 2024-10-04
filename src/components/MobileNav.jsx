@@ -126,8 +126,9 @@ export default function MobileNav() {
   }, [search]);
   let sideNavMobileNavMenu;
   sideNavMobileNavMenu =
-    asLoggedIn &&
-    languages[JSON.parse(localStorage.appData).userData.language || "en"];
+    asLoggedIn ?
+    languages[JSON.parse(localStorage.appData).userData.language || "en"] : null
+
   return asLoggedIn ? (
     <>
       <div style={{ paddingBottom: "20px", width: "100vw" }}>
