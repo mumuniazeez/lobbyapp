@@ -125,9 +125,11 @@ export default function MobileNav() {
     setTab(urlSearchParam.get("tab"));
   }, [search]);
   let sideNavMobileNavMenu;
+  if (asLoggedIn) {
   sideNavMobileNavMenu =
     asLoggedIn ?
     languages[JSON.parse(localStorage.appData).userData.language || "en"] : null
+  }
 
   return asLoggedIn ? (
     <>
