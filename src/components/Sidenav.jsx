@@ -120,9 +120,7 @@ export default function Sidenav() {
 
   let sideNavMobileNavMenu;
   if (asLoggedIn) {
-  sideNavMobileNavMenu =
-    asLoggedIn ?
-    languages[JSON.parse(localStorage.appData).userData.language || "en"] : null
+  sideNavMobileNavMenu = languages[JSON.parse(localStorage.appData).userData.language || "en"]
   }
   
 
