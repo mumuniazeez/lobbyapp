@@ -7,7 +7,7 @@ import { usePrompt, useServer } from "../hooks/hooks";
 import LoadingAnimation from "./LoadingAnimation";
 
 export default function SettingsGeneral() {
-  let { settingsGeneral } = JSON.parse(localStorage.appData).userData.language;
+  let { settingsGeneral } = language[JSON.parse(localStorage.appData).userData.language];
   document.title = settingsGeneral.pageTitle;
   const [myProfile, setMyProfile] = useState(
     JSON.parse(localStorage.appData).userData
