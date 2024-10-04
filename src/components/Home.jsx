@@ -1,7 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSearch,
-  faMessage,
   faArrowLeft,
   faUsers,
   faHouse,
@@ -9,7 +8,6 @@ import {
   faEllipsisVertical,
   faPlus,
   faBell,
-  faSadCry,
   faArrowUpRightFromSquare,
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
@@ -23,14 +21,19 @@ import CreateRoomModal from "./CreateRoomModal";
 import CommunityProfile from "./CommunityProfile";
 import { socketIoConnection } from "../socket/socket";
 import lobbyLogo from "../lobbyLogo.png";
+import languages from "../languages";
 
 export default function Home() {
-  document.title = "Community | Lobby";
+  let { home, discover } = languages[localStorage.language || "en"];
+  document.title = home.pageTitle;
   let { search } = useLocation();
+
   let urlSearchParam = new URLSearchParams(search);
 
   const [communityInfo, setCommunityInfo] = useState(null);
-  const [communities, setCommunities] = useState(null);
+  const [communities, setCommunities] = useState(
+    JSON.parse(localStorage.appData).joinedCommunities
+  );
   const [communityId, setCommunityId] = useState(urlSearchParam.get("cId"));
   const [roomId, setRoomId] = useState(urlSearchParam.get("rId"));
   const [showCommunityProfile, setShowCommunityProfile] = useState(
@@ -72,7 +75,12 @@ export default function Home() {
   }, [socketRef.current, communities]);
 
   useEffect(() => {
-    useServer("/community/joined", "get", setCommunities);
+    useServer("/community/joined", "get", (res) => {
+      let appData = JSON.parse(localStorage.appData);
+      appData.joinedCommunities = res;
+      localStorage.appData = JSON.stringify(appData);
+      setCommunities(res);
+    });
   }, [communityId, roomId]);
 
   useEffect(() => {
@@ -83,10 +91,38 @@ export default function Home() {
 
   useEffect(() => {
     if (communityId || roomId) {
-      useServer(`/community/profile/${communityId}`, "get", setCommunityInfo);
-      // setCommunityInfo(communities.filter(community => community.id === communityId))
+      setCommunityInfo(
+        JSON.parse(localStorage.appData).joinedCommunities.filter(
+          (community) => community.id === communityId
+        )[0]
+      );
 
-      useServer(`/community/rooms/${communityId}`, "get", setRooms);
+      useServer(`/community/profile/${communityId}`, "get", (res) => {
+        let prevCommunity = JSON.parse(
+          localStorage.appData
+        ).joinedCommunities.filter((community) => community.id != communityId);
+        prevCommunity = prevCommunity.concat(res);
+        let newAppData = JSON.parse(localStorage.appData);
+        newAppData.joinedCommunities = prevCommunity;
+        localStorage.appData = JSON.stringify(newAppData);
+        setCommunityInfo(res);
+      });
+
+      setRooms(
+        JSON.parse(localStorage.appData).rooms.filter(
+          (room) => room.communityid === communityId
+        )
+      );
+      useServer(`/community/rooms/${communityId}`, "get", (res) => {
+        let prevRoom = JSON.parse(localStorage.appData).rooms.filter(
+          (room) => room.communityid != communityId
+        );
+        prevRoom = prevRoom.concat(res);
+        let newAppData = JSON.parse(localStorage.appData);
+        newAppData.rooms = prevRoom;
+        localStorage.appData = JSON.stringify(newAppData);
+        setRooms(res);
+      });
     } else {
       setCommunityInfo(null);
       setRooms(null);
@@ -115,7 +151,7 @@ export default function Home() {
           <div className="p-2 pt-4">
             <div className="d-flex justify-content-between mb-2">
               <div>
-                <h4>Communities</h4>
+                <h4>{home.sideNavTitle}</h4>
               </div>
               <div>
                 <div>
@@ -134,7 +170,7 @@ export default function Home() {
                             icon={faPlusCircle}
                             className="me-2"
                           />
-                          Create Community
+                          {home.sideNavMenu.create}
                         </span>
                       </button>
                     </li>
@@ -142,7 +178,7 @@ export default function Home() {
                       <Link to="/settings" className="dropdown-item">
                         <span className="">
                           <FontAwesomeIcon icon={faGear} className="me-2" />
-                          Settings
+                          {home.sideNavMenu.settings}
                         </span>
                       </Link>
                     </li>
@@ -156,7 +192,7 @@ export default function Home() {
                   type="search"
                   className="form-control-lg form-control bg-body-secondary border-0"
                   style={{ fontSize: "12px" }}
-                  placeholder="Search communities"
+                  placeholder={home.searchPlaceholder}
                 />
                 <FontAwesomeIcon icon={faSearch} className="btn" />
               </div>
@@ -180,7 +216,7 @@ export default function Home() {
                     icon={faArrowUpRightFromSquare}
                     className="me-2"
                   />
-                  Open Discover
+                  {home.openDiscoverText}
                 </Link>
                 <button
                   className="w-100 btn btn-primary mt-3"
@@ -188,7 +224,7 @@ export default function Home() {
                   data-bs-target="#createCommunityModal"
                 >
                   <FontAwesomeIcon icon={faPlus} className="me-2" />
-                  Create one
+                  {home.createCommunityText}
                 </button>
               </div>
             ) : (
@@ -237,8 +273,8 @@ export default function Home() {
                         <small className="m-0">
                           {communityInfo.members.length}{" "}
                           {communityInfo.members.length < 2
-                            ? "member"
-                            : "members"}
+                            ? discover.member
+                            : discover.members}
                         </small>
                       </div>
                     </Link>
@@ -275,7 +311,7 @@ export default function Home() {
                         data-bs-target="#createRoomModal"
                       >
                         <FontAwesomeIcon icon={faPlus} className="me-2" />
-                        Add Room
+                        {home.addRoomBtn}
                       </button>
                     </div>
                   ) : null}
@@ -304,8 +340,8 @@ export default function Home() {
                         <small className="m-0">
                           {communityInfo.members.length}{" "}
                           {communityInfo.members.length < 2
-                            ? "member"
-                            : "members"}
+                            ? discover.member
+                            : discover.members}
                         </small>
                       </div>
                     </Link>
@@ -315,7 +351,7 @@ export default function Home() {
                       icon={faPlus}
                       className="me-3 fs-1 text-secondary mb-4"
                     />
-                    <h6>You haven't join this community</h6>
+                    <h6>{home.joinCommunityText}</h6>
                     <Link
                       to={`/discover?cId=${communityInfo.id}`}
                       className="w-100 btn btn-outline-primary mt-3"
@@ -324,7 +360,7 @@ export default function Home() {
                         icon={faArrowUpRightFromSquare}
                         className="me-2"
                       />
-                      Open Discover to join
+                      {home.openDiscoverToJoin}
                     </Link>
                   </div>
                 </>
@@ -332,13 +368,13 @@ export default function Home() {
             ) : (
               <>
                 <LoadingAnimation />
-                <h6 className="text-center">Loading rooms</h6>
+                <h6 className="text-center">{home.loadingRooms}</h6>
               </>
             )
           ) : (
             <>
               <LoadingAnimation />
-              <h6 className="text-center">Loading communities</h6>
+              <h6 className="text-center">{home.loadingCommunities}</h6>
             </>
           )}
         </div>
@@ -380,9 +416,7 @@ export default function Home() {
               <img src={lobbyLogo} alt="lobby logo" width={100} />
 
               <h1>LOBBY WEB</h1>
-              <p>
-                Send and receive messages without keeping your phone online.
-              </p>
+              <p>{home.lobbyText}</p>
             </div>
           </>
         )}

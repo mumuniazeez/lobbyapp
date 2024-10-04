@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useServer, useAlert } from "../hooks/hooks";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 export default function Login() {
   document.title = "Login | Lobby";
@@ -15,6 +17,7 @@ export default function Login() {
     },
   });
   const [isMobile, setIsMobile] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   window.addEventListener("resize", () =>
     setIsMobile(window.innerWidth <= 762)
@@ -119,7 +122,7 @@ export default function Login() {
                 <div className="col-md-6 mb-3">
                   <div className="form-floating">
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       id="password"
                       placeholder="Password"
                       class={`form-control ${userData.password.valid}`}
@@ -142,6 +145,21 @@ export default function Login() {
                     <label htmlFor="password">Password</label>
                     <div className="invalid-feedback">Enter your password</div>
                   </div>
+                </div>
+                <div className="col-12 mb-3">
+                  <button
+                    className="btn"
+                    type="button"
+                    onClick={() => {
+                      setShowPassword(!showPassword);
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={showPassword ? faEyeSlash : faEye}
+                      className="me-2"
+                    />
+                    {showPassword ? "Hide" : "Show"} password
+                  </button>
                 </div>
 
                 <button

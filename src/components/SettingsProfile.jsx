@@ -10,10 +10,13 @@ import { useServer, usePrompt } from "../hooks/hooks";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoadingAnimation from "./LoadingAnimation";
-
+import languages from "../languages";
 export default function SettingsProfile() {
-  document.title = "Profile | Settings";
-  const [myProfile, setMyProfile] = useState(null);
+  let { settingsProfile } = languages[localStorage.language || "en"];
+  document.title = settingsProfile.pageTitle;
+  const [myProfile, setMyProfile] = useState(
+    JSON.parse(localStorage.appData).userData
+  );
   const [isMobile, setIsMobile] = useState(false);
 
   const nav = useNavigate();
@@ -24,7 +27,12 @@ export default function SettingsProfile() {
 
   useEffect(() => {
     setIsMobile(window.innerWidth <= 762);
-    useServer("/user/me", "GET", setMyProfile);
+    useServer("/user/me", "GET", (res) => {
+      let appData = JSON.parse(localStorage.appData);
+      appData.userData = res;
+      localStorage.appData = JSON.stringify(appData);
+      setMyProfile(res);
+    });
   }, []);
 
   const signOut = () => {
@@ -34,13 +42,16 @@ export default function SettingsProfile() {
       "danger",
       "Sign out",
       () => {
+        localStorage.removeItem("appData");
         localStorage.removeItem("token");
+        localStorage.removeItem("language");
         localStorage.removeItem("theme");
         document.body.dataset.bsTheme = "system";
         nav("/login");
       }
     );
   };
+
   return (
     <>
       {myProfile ? (
@@ -63,7 +74,7 @@ export default function SettingsProfile() {
                 <Link to={-1} className="text-decoration-none text-black me-3">
                   <FontAwesomeIcon icon={faArrowLeft} />
                 </Link>
-                <h6 className="m-0">Profile</h6>
+                <h6 className="m-0">{settingsProfile.title}</h6>
               </div>
               <div>
                 <button className="btn" data-bs-toggle="dropdown">
@@ -89,7 +100,7 @@ export default function SettingsProfile() {
                         icon={faSignOut}
                         className="fa fa-share me-2"
                       />
-                      Sign out
+                      {settingsProfile.signOutText}
                     </button>
                   </li>
                 </ul>
@@ -130,16 +141,12 @@ export default function SettingsProfile() {
                 isMobile ? "container-fluid" : "container"
               }`}
             >
-              <small>Bio</small>
-              <p>
-                {myProfile.bio
-                  ? myProfile.bio
-                  : "You haven't add your bio yet."}
-              </p>
+              <small>{settingsProfile.bioText}</small>
+              <p>{myProfile.bio ? myProfile.bio : settingsProfile.noBioText}</p>
               <small>
-                Date of birth |{" "}
+                {settingsProfile.dobText} |{" "}
                 <span className="text-secondary fw-bold">
-                  Your date of birth isn't visible to other users
+                  {settingsProfile.dobSubText}
                 </span>
               </small>
 
@@ -148,7 +155,7 @@ export default function SettingsProfile() {
                   ? `${new Date(myProfile.dob).getDate()}/${new Date(
                       myProfile.dob
                     ).getMonth()}/${new Date(myProfile.dob).getFullYear()}`
-                  : "You haven't add your date of birth yet."}
+                  : settingsProfile.noDobText}
               </p>
             </div>
             <div
@@ -160,9 +167,14 @@ export default function SettingsProfile() {
                 <FontAwesomeIcon icon={faPen} className="me-2" />
                 Edit profile
               </button> */}
-              <button className={`btn btn-danger me-3 my-1 ${isMobile? "w-100 rounded-pill" : ""}`} onClick={signOut}>
+              <button
+                className={`btn btn-danger me-3 my-1 ${
+                  isMobile ? "w-100 rounded-pill" : ""
+                }`}
+                onClick={signOut}
+              >
                 <FontAwesomeIcon icon={faSignOut} className="me-2" />
-                Sign out
+                {settingsProfile.signOutText}
               </button>
             </div>
           </div>

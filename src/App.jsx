@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./App.css";
 import { useState, useEffect } from "react";
+import { useServer } from "./hooks/hooks";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sidenav from "./components/Sidenav";
 import Signup from "./components/Signup";
@@ -16,13 +17,28 @@ import AboutLobby from "./components/AboutLobby";
 
 export default function App() {
   const [isMobile, setIsMobile] = useState(false);
+  const [myProfile, setMyProfile] = useState(null);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= 762);
+    useServer("/user/me", "GET", setMyProfile);
+  }, []);
   window.addEventListener("resize", () =>
     setIsMobile(window.innerWidth <= 762)
   );
 
   useEffect(() => {
-    setIsMobile(window.innerWidth <= 762);
+    useServer("/user/me", "GET", setMyProfile);
   }, []);
+
+  useEffect(() => {
+    if (!myProfile) return;
+    console.log(myProfile);
+    localStorage.language = myProfile.language;
+    document.querySelector("html").lang = myProfile.language || "en";
+    // if (myProfile.language == "ar") document.querySelector("html").dir = "rtl";
+  }, [myProfile]);
+
   return (
     <>
       <div id="modalContainer"></div>

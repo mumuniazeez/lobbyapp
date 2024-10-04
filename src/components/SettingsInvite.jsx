@@ -7,9 +7,11 @@ import {
 import { useAlert } from "../hooks/hooks";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import languages from "../languages";
 
 export default function SettingsInvite() {
-    document.title = "Invite friends";
+  let { settingsInvite } = languages[localStorage.language || "en"];
+  document.title = settingsInvite.title;
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -38,7 +40,7 @@ export default function SettingsInvite() {
               <Link to={-1} className="text-decoration-none text-black me-3">
                 <FontAwesomeIcon icon={faArrowLeft} />
               </Link>
-              <h6 className="m-0">Invite Friends</h6>
+              <h6 className="m-0">{settingsInvite.title}</h6>
             </div>
           </div>
         </div>
@@ -53,9 +55,9 @@ export default function SettingsInvite() {
                   <FontAwesomeIcon icon={faUserPlus} className="fs-3" />
                 </div>
                 <div className="ms-3">
-                  <h6 className="m-0">Invite friends</h6>
+                  <h6 className="m-0">{settingsInvite.inviteFriendsText}</h6>
                   <small className="m-0">
-                    Invite your firend to lobby, connect with your friends.
+                    {settingsInvite.inviteFriendsSubText}
                   </small>
                 </div>
                 <div className="ms-auto">
@@ -66,13 +68,14 @@ export default function SettingsInvite() {
                         await navigator.clipboard.writeText(
                           "http://localhost:5173/"
                         );
-                        useAlert("&#x1F4CB Link copied to clipboard");
+                        useAlert(settingsInvite.copyLinkAlert);
                       } catch (err) {
                         useAlert(err, "danger");
                       }
                     }}
                   >
-                    <FontAwesomeIcon icon={faCopy} className="me-2" /> Copy Invitation link
+                    <FontAwesomeIcon icon={faCopy} className="me-2" />
+                    {settingsInvite.copyLinkBtn}
                   </button>
                 </div>
               </div>

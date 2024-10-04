@@ -10,7 +10,7 @@ socketIoConnection.on("disconnect", () => {
   if (disconnected) return;
   interval = setInterval(() => {
     useAlert("Disconnected, Reconnecting..", "danger");
-  }, 5090);
+  }, 5000);
   disconnected = true;
 });
 

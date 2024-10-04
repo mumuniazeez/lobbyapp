@@ -20,20 +20,23 @@ import SettingsProfile from "./SettingsProfile";
 import SettingsPersonalization from "./SettingsPersonalization";
 import SettingsHelp from "./SettingsHelp";
 import SettingsInvite from "./SettingsInvite";
-
+import languages from "../languages";
 export default function Settings() {
+  let { settings } = languages[localStorage.language || "en"];
+  document.title = settings.pageTitle;
   let { search } = useLocation();
   let urlSearchParam = new URLSearchParams(search);
 
   let nav = useNavigate();
 
-  const [myProfile, setMyProfile] = useState(null);
+  const [myProfile, setMyProfile] = useState(
+    JSON.parse(localStorage.appData).userData
+  );
   const [tab, setTab] = useState(urlSearchParam.get("tab"));
   const [rooms, setRooms] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const [searchData, setSearchData] = useState("");
   const socketRef = useRef(null);
-  document.title = "Settings";
 
   window.addEventListener("resize", () =>
     setIsMobile(window.innerWidth <= 762)
@@ -41,7 +44,12 @@ export default function Settings() {
 
   useEffect(() => {
     setIsMobile(window.innerWidth <= 762);
-    useServer("/user/me", "GET", setMyProfile);
+    useServer("/user/me", "GET", (res) => {
+      let appData = JSON.parse(localStorage.appData);
+      appData.userData = res;
+      localStorage.appData = JSON.stringify(appData);
+      setMyProfile(res);
+    });
   }, []);
 
   useEffect(() => {
@@ -68,7 +76,7 @@ export default function Settings() {
                     >
                       <FontAwesomeIcon icon={faArrowLeft} />
                     </Link>
-                    <h6 className="m-0">Settings</h6>
+                    <h6 className="m-0">{settings.sideNavTitle}</h6>
                   </div>
                 </div>
               </div>
@@ -100,7 +108,7 @@ export default function Settings() {
                   }}
                 >
                   <FontAwesomeIcon icon={faLaptop} className="btn" />
-                  <small style={{ fontSize: "15px" }}>General</small>
+                  <small style={{ fontSize: "15px" }}>{settings.general}</small>
                 </Link>
               </div>
               <div className="m-2 my-3 item">
@@ -112,19 +120,21 @@ export default function Settings() {
                   }}
                 >
                   <FontAwesomeIcon icon={faUser} className="btn" />
-                  <small style={{ fontSize: "15px" }}>Profile</small>
+                  <small style={{ fontSize: "15px" }}>{settings.profile}</small>
                 </Link>
               </div>
               <div className="m-2 my-3 item">
                 <div className="rounded bg-body-secondary btn w-100 p-2 text-start ">
                   <FontAwesomeIcon icon={faMessage} className="btn" />
-                  <small style={{ fontSize: "15px" }}>Chats</small>
+                  <small style={{ fontSize: "15px" }}>{settings.chats}</small>
                 </div>
               </div>
               <div className="m-2 my-3 item">
                 <div className="rounded bg-body-secondary btn w-100 p-2 text-start ">
                   <FontAwesomeIcon icon={faBell} className="btn" />
-                  <small style={{ fontSize: "15px" }}>Notification</small>
+                  <small style={{ fontSize: "15px" }}>
+                    {settings.notification}
+                  </small>
                 </div>
               </div>
               <div className="m-2 my-3 item">
@@ -137,7 +147,9 @@ export default function Settings() {
                   }}
                 >
                   <FontAwesomeIcon icon={faPaintBrush} className="btn" />
-                  <small style={{ fontSize: "15px" }}>Personalization</small>
+                  <small style={{ fontSize: "15px" }}>
+                    {settings.personalization}
+                  </small>
                 </Link>
               </div>
               <div className="m-2 my-3 item">
@@ -149,7 +161,7 @@ export default function Settings() {
                   }}
                 >
                   <FontAwesomeIcon icon={faExclamationCircle} className="btn" />
-                  <small style={{ fontSize: "15px" }}>Help</small>
+                  <small style={{ fontSize: "15px" }}>{settings.help}</small>
                 </Link>
               </div>
               <div className="m-2 my-3 item">
@@ -161,7 +173,9 @@ export default function Settings() {
                   }}
                 >
                   <FontAwesomeIcon icon={faUserPlus} className="btn" />
-                  <small style={{ fontSize: "15px" }}>Invite friends</small>
+                  <small style={{ fontSize: "15px" }}>
+                    {settings.inviteFriends}
+                  </small>
                 </Link>
               </div>
             </div>
@@ -169,7 +183,7 @@ export default function Settings() {
         ) : (
           <>
             <LoadingAnimation />
-            <h6 className="text-center">Loading settings</h6>
+            <h6 className="text-center">{settings.loadingSettings}</h6>
           </>
         )}
       </div>

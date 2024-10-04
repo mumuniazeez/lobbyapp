@@ -1,6 +1,7 @@
 import { useServer } from "../hooks/hooks";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import languages from "../languages";
 export default function CreateCommunityModal() {
   const [communityInfo, setCommunityInfo] = useState({
     name: "",
@@ -29,6 +30,8 @@ export default function CreateCommunityModal() {
       communityInfo
     );
   };
+
+  let { createCommunityModal } = languages[localStorage.language || "en"];
   return (
     <>
       <div
@@ -45,7 +48,7 @@ export default function CreateCommunityModal() {
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="createCommunityModalTitle">
-                Create Community
+                {createCommunityModal.title}
               </h1>
               <button
                 type="button"
@@ -60,7 +63,7 @@ export default function CreateCommunityModal() {
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Name"
+                    placeholder={createCommunityModal.namePlaceholder}
                     id="name"
                     name="name"
                     required
@@ -72,13 +75,15 @@ export default function CreateCommunityModal() {
                       })
                     }
                   />
-                  <label htmlFor="name">Name</label>
+                  <label htmlFor="name">
+                    {createCommunityModal.namePlaceholder}
+                  </label>
                 </div>
                 <div className="form-floating mb-3">
                   <textarea
                     type="text"
                     className="form-control"
-                    placeholder="Description"
+                    placeholder={createCommunityModal.descriptionPlaceholder}
                     id="description"
                     name="description"
                     required
@@ -91,7 +96,9 @@ export default function CreateCommunityModal() {
                       })
                     }
                   ></textarea>
-                  <label htmlFor="description">Description</label>
+                  <label htmlFor="description">
+                    {createCommunityModal.descriptionPlaceholder}
+                  </label>
                 </div>
                 <div className="container text-center">
                   <button
@@ -107,7 +114,7 @@ export default function CreateCommunityModal() {
                         <span className="visually-hidden">Loading...</span>
                       </div>
                     ) : null}
-                    Create Community
+                    {createCommunityModal.createCommunityBtn}
                   </button>
                 </div>
               </form>
@@ -118,7 +125,7 @@ export default function CreateCommunityModal() {
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
               >
-                Close
+                {createCommunityModal.closeBtn}
               </button>
             </div>
           </div>

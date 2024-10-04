@@ -84,6 +84,10 @@ html {
   text-align: start !important;
 }
 
+.chat-container {
+  scroll-behavior: smooth !important;
+}
+
 .chat-input-field-container {
   height: fit-content;
 }
@@ -126,7 +130,7 @@ html {
   left: 0;
   width: 200px !important;
   height: 100vh;
-  
+
   justify-content: start;
   align-items: start;
   text-align: start;
@@ -135,6 +139,10 @@ html {
 
 .animatedLogo {
   animation: logoAnimation 2s ease-in-out infinite;
+}
+
+.useAlertAnimation {
+  animation: goingIn 0.2s ease-out;
 }
 
 @keyframes logoAnimation {
@@ -146,5 +154,14 @@ html {
   }
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes goingIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
   }
 }

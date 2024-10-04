@@ -1,7 +1,7 @@
 const useAlert = (msg = "This is an alert", type = "primary") => {
   let container = document.createElement("div");
   let alertHTML = `
-    <div class="alert alert-${type} alert-dismissible fade show mt-3 " role="alert">
+    <div class="alert alert-${type} alert-dismissible fade show mt-3 useAlertAnimation" role="alert">
     ${msg}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>`;
@@ -111,7 +111,6 @@ const useServer = (
     .then((res) => res.json())
     .then((data) => {
       state(data);
-      console.log(data);
     })
     .catch((err) => {
       usePrompt(
@@ -135,5 +134,7 @@ const useServer = (
       console.log(err);
     });
 };
+
+
 
 export { useServer, useAlert, usePrompt };

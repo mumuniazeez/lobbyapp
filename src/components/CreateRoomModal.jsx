@@ -1,6 +1,7 @@
 import { useServer } from "../hooks/hooks";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import languages from "../languages";
 export default function CreateRoomModal({ communityId }) {
   const [roomInfo, setRoomInfo] = useState({
     name: "",
@@ -29,6 +30,7 @@ export default function CreateRoomModal({ communityId }) {
       roomInfo
     );
   };
+  let { createRoomModal } = languages[localStorage.language || "en"];
   return (
     <>
       <div
@@ -45,7 +47,7 @@ export default function CreateRoomModal({ communityId }) {
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="createRoomModalTitle">
-                Create Room
+                {createRoomModal.title}
               </h1>
               <button
                 type="button"
@@ -60,7 +62,7 @@ export default function CreateRoomModal({ communityId }) {
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Name"
+                    placeholder={createRoomModal.namePlaceholder}
                     id="name"
                     name="name"
                     required
@@ -72,11 +74,13 @@ export default function CreateRoomModal({ communityId }) {
                       })
                     }
                   />
-                  <label htmlFor="name">Name</label>
+                  <label htmlFor="name">
+                    {createRoomModal.namePlaceholder}
+                  </label>
                 </div>
                 <div className="mb-3">
                   <label htmlFor="enableMessage">
-                    Allow community members to send message:
+                    {createRoomModal.enableMessage}:
                   </label>
                   <input
                     type="checkbox"
@@ -106,7 +110,7 @@ export default function CreateRoomModal({ communityId }) {
                         <span className="visually-hidden">Loading...</span>
                       </div>
                     ) : null}
-                    Create Room
+                    {createRoomModal.createRoomBtn}
                   </button>
                 </div>
               </form>
@@ -117,7 +121,7 @@ export default function CreateRoomModal({ communityId }) {
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
               >
-                Close
+                {createRoomModal.closeBtn}
               </button>
             </div>
           </div>

@@ -1,4 +1,3 @@
-import { BoxArrowDown, ArrowRight } from "react-bootstrap-icons";
 import { useState, useEffect } from "react";
 import { useAlert, useServer } from "../hooks/hooks";
 import { useNavigate } from "react-router-dom";
@@ -114,8 +113,10 @@ export default function Signup() {
     setSubmitted(false);
     if (!serverData) return;
     if (serverData.message === "User created successfully!") {
-      useAlert(serverData.message);
+      useAlert(serverData.message, "success");
       nav("/login");
+    } else {
+      useAlert(serverData.message, "danger");
     }
   }, [serverData]);
 

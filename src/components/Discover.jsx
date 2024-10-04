@@ -19,8 +19,11 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import LoadingAnimation from "./LoadingAnimation";
 import CreateCommunityModal from "./CreateCommunityModal";
+import languages from "../languages";
 export default function Discover() {
-  document.title = "Discover | Lobby";
+  let { home, discover } = languages[localStorage.language || "en"];
+  document.title = discover.pageTitle;
+
   let { search } = useLocation();
   let nav = useNavigate();
   let urlSearchParam = new URLSearchParams(search);
@@ -29,7 +32,9 @@ export default function Discover() {
   const [communities, setCommunities] = useState(null);
   const [communityId, setCommunityId] = useState(urlSearchParam.get("cId"));
   const [isMobile, setIsMobile] = useState(false);
-  const [unFilterCommunities, setUnFilterCommunities] = useState(null);
+  const [unFilterCommunities, setUnFilterCommunities] = useState(
+    JSON.parse(localStorage.appData).discover
+  );
   window.addEventListener("resize", () =>
     setIsMobile(window.innerWidth <= 762)
   );
@@ -39,7 +44,12 @@ export default function Discover() {
   }, []);
 
   useEffect(() => {
-    useServer("/community/all/", "get", setUnFilterCommunities);
+    useServer("/community/all/", "get", (res) => {
+      let appData = JSON.parse(localStorage.appData);
+      appData.discover = res;
+      localStorage.appData = JSON.stringify(appData);
+      setUnFilterCommunities(res);
+    });
   }, []);
   useEffect(() => {
     setCommunityId(urlSearchParam.get("cId"));
@@ -107,7 +117,7 @@ export default function Discover() {
         <div className="p-2 pt-4">
           <div className="d-flex justify-content-between mb-2">
             <div>
-              <h4>Discover</h4>
+              <h4>{discover.sideNavTitle}</h4>
             </div>
             <div>
               <div className="me-2">
@@ -119,7 +129,7 @@ export default function Discover() {
                     <Link to="/settings" className="dropdown-item">
                       <span className="">
                         <FontAwesomeIcon icon={faGear} className="me-2" />
-                        Settings
+                        {discover.sideNavMenu.settings}
                       </span>
                     </Link>
                   </li>
@@ -133,7 +143,7 @@ export default function Discover() {
                 type="search"
                 className="form-control-lg form-control bg-body-secondary border-0"
                 style={{ fontSize: "12px" }}
-                placeholder="Search communities"
+                placeholder={discover.searchPlaceholder}
               />
               <FontAwesomeIcon icon={faSearch} className="btn" />
             </div>
@@ -154,7 +164,7 @@ export default function Discover() {
                   data-bs-target="#createCommunityModal"
                 >
                   <FontAwesomeIcon icon={faPlus} className="me-2" />
-                  Create one
+                  {discover.createCommunityText}
                 </button>
               </div>
             ) : communities.length > 0 ? (
@@ -183,7 +193,8 @@ export default function Discover() {
                               className="btn btn-outline-primary rounded-pill"
                               onClick={(e) => joinCommunity(community.id, e)}
                             >
-                              Join <FontAwesomeIcon icon={faSignIn} />
+                              {discover.joinBtn}{" "}
+                              <FontAwesomeIcon icon={faSignIn} />
                             </button>
                           ) : null}
                         </div>
@@ -201,7 +212,8 @@ export default function Discover() {
                   />
                   <h6>No new community available.</h6>
                   <p className="lead">
-                    Open <Link to="/">Joined community</Link>
+                    {discover.open}{" "}
+                    <Link to="/">{discover.joinedCommunity}</Link>
                   </p>
                 </div>
               </>
@@ -209,7 +221,7 @@ export default function Discover() {
           ) : (
             <>
               <LoadingAnimation />
-              <h6 className="text-center">Loading communities</h6>
+              <h6 className="text-center">{discover.loadingCommunities}</h6>
             </>
           )}
         </div>
@@ -270,7 +282,9 @@ export default function Discover() {
                     <p className="lead">{communityInfo.description}</p>
                     <p className="text-secondary">
                       Community | {communityInfo.members.length}{" "}
-                      {communityInfo.members.length < 2 ? "member" : "members"}
+                      {communityInfo.members.length < 2
+                        ? discover.member
+                        : discover.members}
                     </p>
                   </div>
                   <div className="container text-center">
@@ -281,13 +295,15 @@ export default function Discover() {
                             to={`/?cId=${communityInfo.id}`}
                             className="ms-3 btn btn-primary me-3"
                           >
-                            Open <FontAwesomeIcon icon={faSquareArrowUpRight} />
+                            {discover.open}{" "}
+                            <FontAwesomeIcon icon={faSquareArrowUpRight} />
                           </Link>
                           <button
                             className="btn btn-outline-danger rounded-pill"
                             onClick={(e) => leaveCommunity(communityInfo.id, e)}
                           >
-                            Leave <FontAwesomeIcon icon={faSignOut} />
+                            {discover.leaveBtn}{" "}
+                            <FontAwesomeIcon icon={faSignOut} />
                           </button>
                         </>
                       ) : (
@@ -295,11 +311,12 @@ export default function Discover() {
                           className="btn btn-outline-primary"
                           onClick={(e) => joinCommunity(communityInfo.id, e)}
                         >
-                          Join <FontAwesomeIcon icon={faSignIn} />
+                          {discover.joinBtn} <FontAwesomeIcon icon={faSignIn} />
                         </button>
                       )}
                       <button className="ms-3 btn btn-danger">
-                        Report <FontAwesomeIcon icon={faThumbsDown} />
+                        {discover.reportBtn}{" "}
+                        <FontAwesomeIcon icon={faThumbsDown} />
                       </button>
                     </div>
                   </div>
@@ -314,9 +331,7 @@ export default function Discover() {
             <div className="container w-100 h-100 d-flex align-items-center justify-content-center text-primary flex-column">
               <FontAwesomeIcon icon={faMessage} style={{ fontSize: "50pt" }} />
               <h1>LOBBY WEB</h1>
-              <p>
-                Send and receive messages without keeping your phone online.
-              </p>
+              <p>{discover.lobbyText}</p>
             </div>
           </>
         )}

@@ -14,9 +14,11 @@ import {
   faSadCry,
   faUnlink,
 } from "@fortawesome/free-solid-svg-icons";
+import languages from "../languages";
 
 export default function NoPage() {
-  document.title = "404 Page not found";
+  let { notFound } = languages[localStorage.language || "en"];
+  document.title = notFound.pageTitle;
   return (
     <>
       <div className="container-fluid d-flex justify-content-center align-items-center h-100 w-100">
@@ -24,7 +26,7 @@ export default function NoPage() {
           <h1 className="display-3">
             4<FontAwesomeIcon icon={faUnlink} className="" />4
           </h1>
-          <h1>Page Not Found</h1>
+          <h1>{notFound.title}</h1>
         </div>
       </div>
     </>

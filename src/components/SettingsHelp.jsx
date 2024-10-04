@@ -7,9 +7,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import languages from "../languages";
 
 export default function SettingsHelp() {
-    document.title = "Help | Settings";
+  let { settingsHelp } = languages[localStorage.language || "en"];
+  document.title = settingsHelp.pageTitle;
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -38,7 +40,7 @@ export default function SettingsHelp() {
               <Link to={-1} className="text-decoration-none text-black me-3">
                 <FontAwesomeIcon icon={faArrowLeft} />
               </Link>
-              <h6 className="m-0">Help</h6>
+              <h6 className="m-0">{settingsHelp.title}</h6>
             </div>
           </div>
         </div>
@@ -53,8 +55,10 @@ export default function SettingsHelp() {
                   <FontAwesomeIcon icon={faQuestionCircle} className="fs-3" />
                 </div>
                 <div className="ms-3">
-                  <h6 className="m-0">Help center</h6>
-                  <small className="m-0">Get help, contact us</small>
+                  <h6 className="m-0">{settingsHelp.helpCenterText}</h6>
+                  <small className="m-0">
+                    {settingsHelp.helpCenterSubText}
+                  </small>
                 </div>
               </Link>
               <Link className="btn col-12 mb-3 d-flex align-items-center bg-body-secondary text-start py-2 rounded-3">
@@ -62,7 +66,7 @@ export default function SettingsHelp() {
                   <FontAwesomeIcon icon={faFile} className="fs-3" />
                 </div>
                 <div className="ms-3">
-                  <h6 className="m-0">Terms and Privacy Policy</h6>
+                  <h6 className="m-0">{settingsHelp.termAndPrivacyText}</h6>
                 </div>
               </Link>
               <Link
@@ -73,7 +77,7 @@ export default function SettingsHelp() {
                   <FontAwesomeIcon icon={faInfoCircle} className="fs-3" />
                 </div>
                 <div className="ms-3">
-                  <h6 className="m-0">About Lobby</h6>
+                  <h6 className="m-0">{settingsHelp.aboutLobbyText}</h6>
                 </div>
               </Link>
             </div>

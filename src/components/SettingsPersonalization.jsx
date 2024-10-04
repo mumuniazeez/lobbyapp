@@ -1,26 +1,21 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowLeft,
-  faEllipsisVertical,
-  faPaintRoller,
-} from "@fortawesome/free-solid-svg-icons";
-import { useServer, usePrompt, useAlert } from "../hooks/hooks";
+import { faArrowLeft, faPaintRoller } from "@fortawesome/free-solid-svg-icons";
+import { useServer, useAlert } from "../hooks/hooks";
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import LoadingAnimation from "./LoadingAnimation";
-import Chats from "./Chats";
-import CreateCommunityModal from "./CreateCommunityModal";
-import CreateRoomModal from "./CreateRoomModal";
-import CommunityProfile from "./CommunityProfile";
-import { socketIoConnection } from "../socket/socket";
+import languages from "../languages";
 
 export default function SettingsPersonalization() {
-    document.title = "Personalize | Settings";
-  const [myProfile, setMyProfile] = useState(null);
+  let { settingsPersonalization } = languages[localStorage.language || "en"];
+  document.title = settingsPersonalization.pageTitle;
+  const [myProfile, setMyProfile] = useState(
+    JSON.parse(localStorage.appData).userData
+  );
   const [isMobile, setIsMobile] = useState(false);
-  const [theme, setTheme] = useState(localStorage.theme);
-
-  const nav = useNavigate();
+  const [theme, setTheme] = useState(
+    JSON.parse(localStorage.appData).userData.theme
+  );
 
   window.addEventListener("resize", () =>
     setIsMobile(window.innerWidth <= 762)
@@ -28,12 +23,16 @@ export default function SettingsPersonalization() {
 
   useEffect(() => {
     setIsMobile(window.innerWidth <= 762);
-    useServer("/user/me", "GET", setMyProfile);
+    useServer("/user/me", "GET", (res) => {
+      let appData = JSON.parse(localStorage.appData);
+      appData.userData = res;
+      localStorage.appData = JSON.stringify(appData);
+      setMyProfile(res);
+    });
   }, []);
 
   useEffect(() => {
     if (!myProfile) return;
-    localStorage.setItem("theme", myProfile.theme);
     setTheme(myProfile.theme);
   }, [myProfile]);
 
@@ -48,7 +47,9 @@ export default function SettingsPersonalization() {
         ? (document.body.dataset.bsTheme = "dark")
         : (document.body.dataset.bsTheme = "light");
     } else document.body.dataset.bsTheme = theme;
-    localStorage.setItem("theme", theme);
+    let appData = JSON.parse(localStorage.appData);
+    appData.userData.theme = theme;
+    localStorage.appData = JSON.stringify(appData);
   }, [theme]);
 
   const changeTheme = (newTheme) => {
@@ -62,7 +63,6 @@ export default function SettingsPersonalization() {
         theme: newTheme,
       }
     );
-    localStorage.setItem("theme", newTheme);
     setTheme(newTheme);
   };
 
@@ -84,7 +84,7 @@ export default function SettingsPersonalization() {
                 <Link to={-1} className="text-decoration-none text-black me-3">
                   <FontAwesomeIcon icon={faArrowLeft} />
                 </Link>
-                <h6 className="m-0">Personalization</h6>
+                <h6 className="m-0">{settingsPersonalization.title}</h6>
               </div>
             </div>
           </div>
@@ -99,9 +99,11 @@ export default function SettingsPersonalization() {
                     <FontAwesomeIcon icon={faPaintRoller} className="fs-3" />
                   </div>
                   <div className="ms-3">
-                    <h6 className="m-0">Choose your theme</h6>
+                    <h6 className="m-0">
+                      {settingsPersonalization.chooseThemeText}
+                    </h6>
                     <small className="m-0">
-                      Change the theme of your Lobby App
+                      {settingsPersonalization.chooseThemeSubText}
                     </small>
                   </div>
                   <div className="ms-auto">
@@ -110,9 +112,15 @@ export default function SettingsPersonalization() {
                       onChange={(e) => changeTheme(e.target.value)}
                       className="form-select"
                     >
-                      <option value="system">System</option>
-                      <option value="light">Light</option>
-                      <option value="dark">Dark</option>
+                      <option value="system">
+                        {settingsPersonalization.themeSystem}
+                      </option>
+                      <option value="light">
+                        {settingsPersonalization.themeLight}
+                      </option>
+                      <option value="dark">
+                        {settingsPersonalization.themeDark}
+                      </option>
                     </select>
                   </div>
                 </div>

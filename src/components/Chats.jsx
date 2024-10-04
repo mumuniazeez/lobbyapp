@@ -16,11 +16,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import EmojiPicker from "emoji-picker-react";
 import { useState, useEffect, useRef } from "react";
-import { usePrompt, useServer } from "../hooks/hooks";
+import { useAlert, usePrompt, useServer } from "../hooks/hooks";
 import LoadingAnimation from "./LoadingAnimation";
 import { Link } from "react-router-dom";
 import { socketIoConnection } from "../socket/socket";
 import MessageCard from "./MessageCard";
+import languages from "../languages";
+import lobbyLogo from "../lobbyLogo.png";
 
 export default function Chats({ communityId, roomId }) {
   const [roomInfo, setRoomInfo] = useState(null);
@@ -33,9 +35,14 @@ export default function Chats({ communityId, roomId }) {
     username: "",
     message: "",
   });
+  const [fromLocalHost, setFromLocalHost] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [myProfile, setMyProfile] = useState(null);
   const [unSentMessages, setUnSentMessages] = useState([]);
+  const [showDownBtn, setShowDownBtn] = useState(false);
+  const messageInput = useRef(null);
+  const chatSpaceRef = useRef(null);
+  const socketRef = useRef(null);
 
   window.addEventListener("resize", () =>
     setIsMobile(window.innerWidth <= 762)
@@ -52,13 +59,26 @@ export default function Chats({ communityId, roomId }) {
     }
   }, [myProfile]);
 
-  const chatSpaceRef = useRef(null);
-  const socketRef = useRef(null);
-
   useEffect(() => {
-    setRoomInfo(null);
+    setFromLocalHost(true);
+    // setRoomInfo(
+    //   JSON.parse(localStorage.appData).rooms.filter(
+    //     (room) => room.id === roomId
+    //   )[0]
+    // );
+
     setMessageInfo({ ...messageInfo, roomId });
-    useServer(`/room/info/${roomId}`, "get", setRoomInfo);
+    useServer(`/room/info/${roomId}`, "get", (res) => {
+      // let prevRooms = JSON.parse(localStorage.appData).rooms.filter(
+      //   (room) => room.id != roomId
+      // );
+      // prevRooms = prevRooms.concat(res);
+      // let newAppData = JSON.parse(localStorage.appData);
+      // newAppData.rooms = prevRooms;
+      // localStorage.appData = JSON.stringify(newAppData);
+      // setFromLocalHost(false);
+      setRoomInfo(res);
+    });
   }, [roomId]);
 
   useEffect(() => {
@@ -72,6 +92,28 @@ export default function Chats({ communityId, roomId }) {
       setScrollToBottom(false);
     }
   }, [messages, unSentMessages, chatSpaceRef.current, scrollToBottom]);
+
+  useEffect(() => {
+    if (chatSpaceRef.current) {
+      chatSpaceRef.current.scrollTo(0, chatSpaceRef.current.scrollHeight);
+
+      chatSpaceRef.current.onscroll = () => {
+        console.log("scrolling");
+        setShowDownBtn(
+          chatSpaceRef.current.scrollTop + 494 <
+            chatSpaceRef.current.scrollHeight
+        );
+        console.log(
+          "🚀 ~ useEffect ~ chatSpaceRef.current.scrollHeight:",
+          chatSpaceRef.current.scrollHeight
+        );
+        console.log(
+          "🚀 ~ useEffect ~  chatSpaceRef.current.scrollTop:",
+          chatSpaceRef.current.scrollTop
+        );
+      };
+    }
+  }, [chatSpaceRef.current]);
 
   window.onbeforeunload = () => {
     if (socketRef.current && messageInfo.username) {
@@ -101,6 +143,18 @@ export default function Chats({ communityId, roomId }) {
         setUnSentMessages(
           unSentMessages.filter((message) => message.message !== msg.message)
         );
+        // if (msg.creator != myProfile.username) {
+        //   Notification.requestPermission().then((perm) => {
+        //     if (perm == "granted") {
+        //       new Notification("You have a new message", {
+        //         body: msg.message,
+        //         icon: lobbyLogo,
+        //       });
+        //     } else {
+        //       useAlert("Please allow notification");
+        //     }
+        //   });
+        // }
       });
     }
 
@@ -109,7 +163,6 @@ export default function Chats({ communityId, roomId }) {
         socketIoConnection.off("connect");
         socketIoConnection.off("sendMessage");
         socketIoConnection.off("prevMessage");
-        socketIoConnection.off("sendMessage");
         socketRef.current.emit("leaveRoom", messageInfo);
       }
     };
@@ -133,8 +186,11 @@ export default function Chats({ communityId, roomId }) {
       socketRef.current.emit("sendMessage", messageInfo);
       setMessageInfo({ ...messageInfo, message: "" });
       setScrollToBottom(true);
+      messageInput.current && messageInput.current.focus();
     }
   };
+
+  let { chats } = languages[localStorage.language || "en"];
 
   const UnsentMessages = () => {
     return (
@@ -158,7 +214,7 @@ export default function Chats({ communityId, roomId }) {
                     className="d-block lead w-100 text-end"
                     style={{ fontSize: "8pt" }}
                   >
-                    Sending...
+                    {chats.sendingText}
                   </span>
                 </div>
               </div>
@@ -190,16 +246,11 @@ export default function Chats({ communityId, roomId }) {
     let currentDate = `${currentDateObj.getDate()}/${currentDateObj.getMonth()}/${currentDateObj.getFullYear()}`;
 
     if (chatDate === currentDate) {
-      return "Today";
+      return chats.todayText;
     } else if (chatDate === yesterdayDate) {
-      return "Yesterday";
+      return chats.yesterdayText;
     }
     return chatDate;
-  };
-
-  const handleContextMenu = (e = new MouseEvent("contextmenu")) => {
-    e.preventDefault();
-    console.log(e.target.closest(`button`));
   };
 
   return roomInfo && communityInfo ? (
@@ -255,7 +306,7 @@ export default function Chats({ communityId, roomId }) {
         </div>
         <div
           ref={chatSpaceRef}
-          className="mb-3 overflow-hidden overflow-y-scroll"
+          className="mb-3 overflow-hidden overflow-y-scroll chat-container"
           style={{
             scrollBehavior: "smooth",
             height: `calc(87dvh - 50px)`,
@@ -289,11 +340,10 @@ export default function Chats({ communityId, roomId }) {
                       </div>
                     );
                   })}
+                  {unSentMessages.length > 0 && <UnsentMessages />}
 
-                  {/* <div className="position-fixed bottom-0 left-5">
-                    {chatSpaceRef.current &&
-                    chatSpaceRef.current.scrollTop <
-                      chatSpaceRef.current.scrollHeight ? (
+                  {/* <div className="position-fixed bottom-5 left-5">
+                    {showDownBtn && (
                       <button
                         className="btn btn-primary rounded-circle"
                         onClick={() => {
@@ -307,7 +357,7 @@ export default function Chats({ communityId, roomId }) {
                       >
                         <FontAwesomeIcon icon={faArrowDown} />
                       </button>
-                    ) : null}
+                    )}
                   </div> */}
                 </>
               ) : (
@@ -332,7 +382,7 @@ export default function Chats({ communityId, roomId }) {
                     <button className="btn btn-primary rounded-pill">
                       {" "}
                       <FontAwesomeIcon icon={faInfo} className="me-2" />
-                      Community info
+                      {chats.communityInfoText}
                     </button>
                   </div>
                 </div>
@@ -340,7 +390,7 @@ export default function Chats({ communityId, roomId }) {
             ) : (
               <>
                 <LoadingAnimation />
-                <h6 className="text-center">Loading chat</h6>
+                <h6 className="text-center">{chats.loadingChat}</h6>
               </>
             )
           ) : (
@@ -349,7 +399,7 @@ export default function Chats({ communityId, roomId }) {
                 icon={faPlus}
                 className="me-3 fs-1 text-secondary mb-4"
               />
-              <h3>You haven't join this community</h3>
+              <h3>{chats.joinCommunityText}</h3>
               <Link
                 to={`/discover?cId=${communityInfo.id}`}
                 className="btn btn-outline-primary mt-3"
@@ -358,15 +408,15 @@ export default function Chats({ communityId, roomId }) {
                   icon={faArrowUpRightFromSquare}
                   className="me-2"
                 />
-                Join to see messages
+                {chats.joinCommunityBtnText}
               </Link>
             </div>
           )}
-          {unSentMessages.length > 0 && <UnsentMessages />}
-
-          
         </div>
-        {communityInfo.isInCommunity && messages && chatSpaceRef.current ? (
+        {communityInfo.isInCommunity &&
+        messages &&
+        myProfile &&
+        chatSpaceRef.current ? (
           <div
             className="container py-0 chat-input-field-container d-flex align-items-center justify-content-center"
             style={
@@ -407,19 +457,21 @@ export default function Chats({ communityId, roomId }) {
                         });
                       }}
                       theme={
-                        localStorage.theme === "system"
+                        JSON.parse(localStorage.appData).userData.theme ===
+                        "system"
                           ? "auto"
-                          : localStorage.theme
+                          : JSON.parse(localStorage.appData).userData.theme
                       }
                     />
                   </ul>
                 </div>
                 <textarea
+                  ref={messageInput}
                   name=""
                   id=""
                   rows={1}
                   className="bg-light w-100 px-4 chat-input-field rounded-3 d-flex align-items-center rounded-start-0"
-                  placeholder="Type your message"
+                  placeholder={chats.chatInputPlaceHolder}
                   value={messageInfo.message}
                   autoFocus
                   onChange={(e) => {
@@ -442,9 +494,9 @@ export default function Chats({ communityId, roomId }) {
                 name=""
                 id=""
                 rows={1}
-                className="w-100 border px-4 chat-input-field rounded-3 d-flex align-items-center disabled"
+                className="bg-light w-100 px-4 chat-input-field rounded-3 d-flex align-items-center disabled"
                 disabled
-                placeholder="Only admin can send message."
+                placeholder={chats.disabledInputPlaceHolder}
               ></textarea>
             )}
           </div>
