@@ -22,6 +22,8 @@ export default function Sidenav() {
   const [expandMenu, setExpandMenu] = useState(false);
   const [loadingText, setLoadingText] = useState("");
   const [progress, setProgress] = useState(0);
+  const [sideNavMobileNavMenu, setSideNavMobileNavMenu] = useState(null);
+  if (localStorage.appData) setSideNavMobileNavMenu(languages[JSON.parse(localStorage.appData).userData.language || "en"])
 
   let { pathname, search } = useLocation();
 
@@ -115,10 +117,7 @@ export default function Sidenav() {
       });
     }
   }, []);
-  let sideNavMobileNavMenu;
-  sideNavMobileNavMenu =
-    asLoggedIn ?
-    languages[JSON.parse(localStorage.appData).userData.language || "en"] : null
+
 
   return asLoggedIn ? (
     <>
