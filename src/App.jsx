@@ -32,7 +32,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!myProfile && !appData) return;
+    if (!myProfile && !localStorage.appData) return;
     console.log(myProfile);
     let appData = JSON.parse(localStorage.appData);
     appData.userData.language = myProfile.language;
