@@ -28,7 +28,7 @@ export default function MobileNav() {
 
  
   useEffect(() => {
-   if (!JSON.parse(localStorage.appData)) return;
+   if (!localStorage.appData) return;
     if (JSON.parse(localStorage.appData).theme === "system") {
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
