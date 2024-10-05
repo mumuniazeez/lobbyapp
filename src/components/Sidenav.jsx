@@ -120,7 +120,7 @@ export default function Sidenav() {
     let { sideNavMobileNavMenu } =
       languages[JSON.parse(localStorage.appData).userData.language || "en"];
 
-    return asLoggedIn ? (
+    return (
       <>
         <div
           className=""
@@ -231,7 +231,9 @@ export default function Sidenav() {
           </div>
         </div>
       </>
-    ) : (
+    );
+  } else {
+    return (
       <div
         className="container-fluid d-flex align-items-center justify-content-center flex-column"
         style={{ height: "100vh" }}

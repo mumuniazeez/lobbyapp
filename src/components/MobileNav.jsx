@@ -127,7 +127,7 @@ export default function MobileNav() {
     let { sideNavMobileNavMenu } =
       languages[JSON.parse(localStorage.appData).userData.language || "en"];
 
-    return asLoggedIn ? (
+    return (
       <>
         <div style={{ paddingBottom: "20px", width: "100vw" }}>
           <Outlet />
@@ -194,7 +194,9 @@ export default function MobileNav() {
           </>
         ) : null}
       </>
-    ) : (
+    );
+  } else {
+    return (
       <div
         className="container-fluid d-flex align-items-center justify-content-center flex-column"
         style={{ height: "100vh" }}
