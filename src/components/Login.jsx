@@ -37,6 +37,9 @@ export default function Login() {
     setSubmitted(false);
     if (!serverData) return;
     if (!serverData.message) {
+      localStorage.removeItem("appData");
+      localStorage.removeItem("language");
+      localStorage.removeItem("theme");
       localStorage.setItem("token", serverData.token);
       nav(sessionStorage.getItem("urlRef") || "/");
     } else useAlert(serverData.message, "danger");
