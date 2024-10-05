@@ -26,7 +26,7 @@ export default function Sidenav() {
   let { pathname, search } = useLocation();
 
   useEffect(() => {
-   if (!localStorage.appData) return;
+    if (!localStorage.appData) return;
     if (JSON.parse(localStorage.appData).theme === "system") {
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -34,8 +34,6 @@ export default function Sidenav() {
         : (document.body.dataset.bsTheme = "light");
     } else document.body.dataset.bsTheme = localStorage.theme;
   }, []);
-
-  
 
   useEffect(() => {
     if (!localStorage.appData) {
@@ -118,152 +116,152 @@ export default function Sidenav() {
     }
   }, []);
 
-  let sideNavMobileNavMenu;
   if (asLoggedIn) {
-  sideNavMobileNavMenu = languages[JSON.parse(localStorage.appData).userData.language || "en"]
-  }
-  
+    let { sideNavMobileNavMenu } =
+      languages[JSON.parse(localStorage.appData).userData.language || "en"];
 
-
-  return asLoggedIn ? (
-    <>
-      <div
-        className=""
-        style={{
-          width: "65px",
-        }}
-      >
+    return asLoggedIn ? (
+      <>
         <div
-          class={`d-flex flex-column flex-shrink-0 p-0 h-100 align-items-start justify-content-start text-start nav-expanded ${
-            expandMenu ? "active border-end shadow rounded-end-3" : ""
-          }`}
+          className=""
           style={{
             width: "65px",
           }}
-          onMouseLeave={(e) => {
-            if (!expandMenu) return;
-            window.onclick = () => {
-              setExpandMenu(false);
-            };
-          }}
-          onMouseEnter={(e) => {
-            window.onclick = () => {};
-          }}
         >
-          <ul className="nav nav-pills nav-flush flex-column mb-auto text-center p-0">
-            <li className="nav-item">
-              <div className="d-flex align-items-center justify-content-start fs-4 fw-bold p-2">
-                <FontAwesomeIcon
-                  className={`p-2 fs-5 ${
-                    expandMenu ? "text-primary" : "text-secondary"
-                  }`}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setExpandMenu(!expandMenu)}
-                  icon={expandMenu ? faClose : faNavicon}
-                />
-              </div>
-            </li>
-            <li className="nav-item">
+          <div
+            class={`d-flex flex-column flex-shrink-0 p-0 h-100 align-items-start justify-content-start text-start nav-expanded ${
+              expandMenu ? "active border-end shadow rounded-end-3" : ""
+            }`}
+            style={{
+              width: "65px",
+            }}
+            onMouseLeave={(e) => {
+              if (!expandMenu) return;
+              window.onclick = () => {
+                setExpandMenu(false);
+              };
+            }}
+            onMouseEnter={(e) => {
+              window.onclick = () => {};
+            }}
+          >
+            <ul className="nav nav-pills nav-flush flex-column mb-auto text-center p-0">
+              <li className="nav-item">
+                <div className="d-flex align-items-center justify-content-start fs-4 fw-bold p-2">
+                  <FontAwesomeIcon
+                    className={`p-2 fs-5 ${
+                      expandMenu ? "text-primary" : "text-secondary"
+                    }`}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setExpandMenu(!expandMenu)}
+                    icon={expandMenu ? faClose : faNavicon}
+                  />
+                </div>
+              </li>
+              <li className="nav-item">
+                <Link
+                  to="/"
+                  className="d-flex align-items-center justify-content-start p-2 text-decoration-none"
+                >
+                  <FontAwesomeIcon
+                    className={`p-2 fs-6 ${
+                      pathname === "/" ? "" : "text-black"
+                    }`}
+                    icon={faUsers}
+                  />
+                  <span className="ms-3 text-black fs-6">
+                    {sideNavMobileNavMenu.communitiesText}
+                  </span>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link
+                  to="/discover"
+                  className="d-flex align-items-center justify-content-start p-2 text-decoration-none"
+                >
+                  <FontAwesomeIcon
+                    className={`p-2 fs-5 ${
+                      pathname === "/discover" ? "" : "text-black"
+                    }`}
+                    icon={faNewspaper}
+                  />
+                  <span className="ms-3 text-black fs-6">
+                    {sideNavMobileNavMenu.discoverText}
+                  </span>
+                </Link>
+              </li>
+            </ul>
+            <div className="border-top w-100">
               <Link
-                to="/"
+                to="/settings"
                 className="d-flex align-items-center justify-content-start p-2 text-decoration-none"
               >
                 <FontAwesomeIcon
-                  className={`p-2 fs-6 ${pathname === "/" ? "" : "text-black"}`}
-                  icon={faUsers}
+                  icon={faGear}
+                  className={`p-2 fs-5 ${
+                    pathname === "/settings" ? "" : "text-black"
+                  }`}
                 />
                 <span className="ms-3 text-black fs-6">
-                  {sideNavMobileNavMenu.communitiesText}
+                  {sideNavMobileNavMenu.settingsText}
                 </span>
               </Link>
-            </li>
-            <li className="nav-item">
               <Link
-                to="/discover"
+                to="/settings?tab=profile"
                 className="d-flex align-items-center justify-content-start p-2 text-decoration-none"
               >
                 <FontAwesomeIcon
+                  icon={faUser}
                   className={`p-2 fs-5 ${
-                    pathname === "/discover" ? "" : "text-black"
+                    pathname + search === "/settings?tab=profile"
+                      ? ""
+                      : "text-black"
                   }`}
-                  icon={faNewspaper}
                 />
                 <span className="ms-3 text-black fs-6">
-                  {sideNavMobileNavMenu.discoverText}
+                  {sideNavMobileNavMenu.profileText}
                 </span>
               </Link>
-            </li>
-          </ul>
-          <div className="border-top w-100">
-            <Link
-              to="/settings"
-              className="d-flex align-items-center justify-content-start p-2 text-decoration-none"
-            >
-              <FontAwesomeIcon
-                icon={faGear}
-                className={`p-2 fs-5 ${
-                  pathname === "/settings" ? "" : "text-black"
-                }`}
-              />
-              <span className="ms-3 text-black fs-6">
-                {sideNavMobileNavMenu.settingsText}
-              </span>
-            </Link>
-            <Link
-              to="/settings?tab=profile"
-              className="d-flex align-items-center justify-content-start p-2 text-decoration-none"
-            >
-              <FontAwesomeIcon
-                icon={faUser}
-                className={`p-2 fs-5 ${
-                  pathname + search === "/settings?tab=profile"
-                    ? ""
-                    : "text-black"
-                }`}
-              />
-              <span className="ms-3 text-black fs-6">
-                {sideNavMobileNavMenu.profileText}
-              </span>
-            </Link>
-          </div>
-        </div>
-      </div>
-      <div style={{ width: "100vw" }}>
-        <div className="row" style={{ height: "100vh" }}>
-          <Outlet />
-        </div>
-      </div>
-    </>
-  ) : (
-    <div
-      className="container-fluid d-flex align-items-center justify-content-center flex-column"
-      style={{ height: "100vh" }}
-    >
-      <img
-        src={lobbyLogo}
-        alt="lobby logo"
-        width={100}
-        className="animatedLogo"
-      />
-      {loadingText && (
-        <div className="mt-5 pt-5">
-          <div className="progress mb-3 w-100 border">
-            <div
-              className={"progress-bar w-" + progress}
-              role="progressbar"
-              aria-valuenow={progress}
-              aria-valuemin="0"
-              aria-valuemax="100"
-            >
-              {progress}%
             </div>
           </div>
-          <div className="text-center">
-            <h6>Loading App data || {loadingText}..</h6>
-            <p>This take place only when logging.</p>
+        </div>
+        <div style={{ width: "100vw" }}>
+          <div className="row" style={{ height: "100vh" }}>
+            <Outlet />
           </div>
         </div>
-      )}
-    </div>
-  );
+      </>
+    ) : (
+      <div
+        className="container-fluid d-flex align-items-center justify-content-center flex-column"
+        style={{ height: "100vh" }}
+      >
+        <img
+          src={lobbyLogo}
+          alt="lobby logo"
+          width={100}
+          className="animatedLogo"
+        />
+        {loadingText && (
+          <div className="mt-5 pt-5">
+            <div className="progress mb-3 w-100 border">
+              <div
+                className={"progress-bar w-" + progress}
+                role="progressbar"
+                aria-valuenow={progress}
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                {progress}%
+              </div>
+            </div>
+            <div className="text-center">
+              <h6>Loading App data || {loadingText}..</h6>
+              <p>This take place only when logging.</p>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 }
