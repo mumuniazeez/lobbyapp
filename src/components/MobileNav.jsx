@@ -61,25 +61,40 @@ export default function MobileNav() {
             setLoadingText("Loading rooms");
             appData.rooms = [];
             let communities = res;
-            communities.forEach((community, index) => {
-              useServer(`/community/rooms/${community.id}`, "get", (res) => {
-                appData.rooms = appData.rooms.concat(res);
-                console.log("🚀 ~ useServer ~ rooms:", appData.rooms);
-                console.log(appData.rooms);
-                if (index === communities.length - 1) {
-                  setProgress(75);
-                  useServer("/community/all/", "get", (res) => {
-                    setLoadingText("Loading discover");
-                    setProgress(100);
-                    appData.discover = res;
-                    setTimeout(() => {
-                      localStorage.appData = JSON.stringify(appData);
-                      location.reload();
-                    }, 2000);
-                  });
-                }
+            if (typeof communities.message != "string") {
+              communities.forEach((community, index) => {
+                useServer(`/community/rooms/${community.id}`, "get", (res) => {
+                  appData.rooms = appData.rooms.concat(res);
+                  console.log("🚀 ~ useServer ~ rooms:", appData.rooms);
+                  console.log(appData.rooms);
+                  if (index === communities.length - 1) {
+                    setProgress(75);
+                    useServer("/community/all/", "get", (res) => {
+                      setLoadingText("Loading discover");
+                      setProgress(100);
+                      appData.discover = res;
+                      setTimeout(() => {
+                        localStorage.appData = JSON.stringify(appData);
+                        location.reload();
+                      }, 2000);
+                    });
+                  }
+                });
               });
-            });
+            } else {
+              setProgress(75);
+              setLoadingText("Loading discover");
+
+              useServer("/community/all/", "get", (res) => {
+                setLoadingText("Loading discover");
+                setProgress(100);
+                appData.discover = res;
+                setTimeout(() => {
+                  localStorage.appData = JSON.stringify(appData);
+                  location.reload();
+                }, 2000);
+              });
+            }
           });
         }
       });
